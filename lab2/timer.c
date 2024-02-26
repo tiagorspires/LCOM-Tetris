@@ -55,9 +55,7 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
 
   if (timer_get_conf(timer, &st)) return 1;
  
-  uint8_t control_word;
-  control_word = st & 0x0F;  
-  control_word |= TIMER_LSB_MSB;
+  uint8_t control_word = TIMER_LSB_MSB;
 
   switch(timer) {
     case 0: 
@@ -72,6 +70,9 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
     default: 
       return 1;
   }
+
+  st &= (BIT(3) | BIT(2) | BIT(1));
+  control_word |= st;
 
   if (sys_outb(TIMER_CTRL, control_word)) return 1;
 
