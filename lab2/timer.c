@@ -78,38 +78,20 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
 }
 
 int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field field) {
-
-  union timer_status_field_val data;
-
+  union timer_status_field_val data; // variável que vai conter o valor a mostrar
   switch (field) {
-
-    case tsf_all: 
-      data.byte = st; 
+    case tsf_all:
+      data.byte = st;
       break;
-
-    case tsf_initial:                                       
-      st = (st >> 4) & 0x03;
-
-      if (st == 1) data.in_mode = LSB_only;
-      else if (st == 2) data.in_mode = MSB_only;
-      else if (st == 3) data.in_mode = MSB_after_LSB;
-      else data.in_mode = INVAL_val;
-      
+    case tsf_initial:
+      data.in_mode = (st & TIMER_LSB_MSB) >> 4;
       break;
-
     case tsf_mode:
-      st = (st >> 1) & 0x07;
-
-      if(st == 6) data.count_mode = 2;
-      else if(st == 7) data.count_mode = 3;
-      else data.count_mode = st;
-
+      data.count_mode = (st & (BIT(1) | BIT(2) | BIT(3))) >> 1;
       break;
-    
     case tsf_base:
-      data.bcd = st & TIMER_BCD;
-      break;        
-
+      data.bcd = (st & TIMER_BCD);
+      break;
     default:
       return 1;
   }
