@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-uint32_t counter=0;
+extern int counter;
 
 int (util_sys_inb)(int port, uint8_t *value){
     if (value == NULL) return 1;
