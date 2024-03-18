@@ -41,7 +41,7 @@ switch(field) {
     return 1;
 }
 
-timer_print_config(timer, field, conf);
+if (timer_print_config(timer, field, conf)) return 1;
 
 return 0;
 }
@@ -50,11 +50,11 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
   
   if (freq < TIMER_MIN_FREQ || freq > TIMER_FREQ || timer < 0 || timer > 2) return 1;
 
-  uint8_t st;
+  uint8_t control_word;
 
-  if (timer_get_conf(timer, &st)) return 1;
- 
-  uint8_t control_word = TIMER_LSB_MSB;
+  if (timer_get_conf(timer, &control_word)) return 1;
+
+  control_word = ((control_word & 0x0F) | TIMER_LSB_MSB);
 
   switch(timer) {
     case 0: 
@@ -69,9 +69,6 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
     default: 
       return 1;
   }
-
-  st &= (BIT(3) | BIT(2) | BIT(1));
-  control_word |= st;
 
   if (sys_outb(TIMER_CTRL, control_word)) return 1;
 
