@@ -18,7 +18,7 @@ int (keyboard_unsubscribe) (){
     return 0;
 }
 
-void (kbc_ih)() { // read scancode
+void (kbc_ih_keyboard)() { // read scancode
     int tries = 10;
     uint8_t status;
     while(tries){

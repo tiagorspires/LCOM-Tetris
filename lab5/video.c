@@ -14,3 +14,95 @@ int (set_video_mode)(uint16_t submode) {
   return sys_int86(&reg86);
 
 }
+
+int get_mode_info (uint16_t mode){ // encontrar o modo de resolucao
+    memset(&mode_info, 0, sizeof(vbe_mode_info_t));
+    if(vbe_get_mode_info(mode ,&mode_info)!=0) return 1;
+    return 0;
+}
+
+
+
+unsigned int (bytes_per_pixel)(){ // calculo do numero de bytes por pixel
+    return (mode_info.BitsPerPixel + 7) >> 3;
+}
+
+unsigned int (get_frame_buffer_size)(){ // calculo do tamanho do buffer
+    return mode_info.XResolution * mode_info.YResolution * bytes_per_pixel();
+}
+
+int set_frame_buffer(uint16_t mode){
+    get_mode_info(mode);
+    unsigned int frame_buffer_size = get_frame_buffer_size();
+
+    struct minix_mem_range mr; // memoria fisica (memory mapping)
+    mr.mr_base = mode_info.PhysBasePtr;
+    mr.mr_limit = mr.mr_base + frame_buffer_size;
+
+    // alocar a memomoria fisica necessaria
+    if(sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)) return 1;
+
+    // mapear a memoria fisica para a memoria virtual
+
+    video_mem = vm_map_phys(SELF, (void *)mr.mr_base, frame_buffer_size);
+
+    if(video_mem == NULL) return 1;
+
+return 0;
+}
+
+int (set_pixel_color) (uint16_t x, uint16_t y, uint32_t color){
+    
+    // verificar se as coordenadas estao dentro dos limites do ecrã
+
+    if(x > mode_info.XResolution || y > mode_info.YResolution ) return 1;
+
+    // define where to color the pixel
+
+    unsigned int start_index = (y * mode_info.XResolution + x) * bytes_per_pixel();
+
+    // copiar a cor para o pixel
+    if(memcpy(&video_mem[start_index], &color, bytes_per_pixel()) == NULL) return 1;
+
+    
+    return 0;
+
+}
+
+// desenhar uma linha horizontal
+
+int (draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color){
+    
+    while (len > 0){
+        if(set_pixel_color(x, y, color) != 0) return 1;
+        x++;
+        len--;
+    }
+
+    return 0;
+}
+
+int (draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color){
+    while (height > 0){
+        if(draw_hline(x, y, width, color) != 0) return 1;
+        y++;
+        height--;
+    }
+    return 0;
+}
+
+// normalizar a cor
+
+int normalize_color(uint32_t color, uint32_t *new_color) {
+    if (mode_info.BitsPerPixel == 32) {
+        *new_color = color;
+    } else {
+        uint32_t bitmask = (1 << mode_info.BitsPerPixel) - 1;
+        *new_color = color & bitmask;
+    }
+    return 0;
+}
+
+
+
+

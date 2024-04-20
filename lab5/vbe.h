@@ -5,5 +5,8 @@
 #define BX_GRAPHICS_MODE BIT(14)
 #define INTNO 0x10
 
+
+#define DIRECT_COLOR_MODE 0x06
+#define INDEXED_COLOR_MODE 0x04
 #endif
 

@@ -52,7 +52,7 @@ int(kbd_test_scan)() {
     switch (_ENDPOINT_P(msg.m_source)) {
       case HARDWARE: /* hardware interrupt notification */
         if (msg.m_notify.interrupts & irq_set) { /* subscribed interrupt */
-          kbc_ih();
+          kbc_ih_keyboard();
           kbd_print_scancode(!(scancode & BREAK_CODE),scancode== TWO_BYTES?2:1, &scancode);
         }
         break;
@@ -91,6 +91,7 @@ int(kbd_test_poll)() {
         }
       }
     }
+    //tickdelay(micros_to_ticks(DELAY_US));              
     tries--;
   }  
 }
