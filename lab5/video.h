@@ -25,6 +25,8 @@ uint32_t (indexed_mode)(uint16_t col, uint16_t row, uint8_t step, uint32_t first
 
 uint32_t direct_mode(uint8_t red, uint8_t green, uint8_t blue);
 
+int (draw_xpm)(uint16_t x, uint16_t y, xpm_map_t xpm);
+
 
 
 

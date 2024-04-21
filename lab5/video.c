@@ -140,7 +140,23 @@ uint32_t direct_mode(uint8_t red, uint8_t green, uint8_t blue) {
 }
 
 
+int (draw_xpm)(uint16_t x, uint16_t y, xpm_map_t xpm){
 
+xpm_image_t image;
+
+uint8_t *colors = xpm_load(xpm, XPM_INDEXED, &image);
+
+if(colors == NULL) return 1;
+
+for (int i = 0; i < image.height; i++){
+    for (int j = 0; j < image.width; j++){
+        uint32_t color = colors[i * image.width + j];
+        if(set_pixel_color(x + j, y + i, color) != 0) return 1;
+    }
+}
+
+return 0;
+}
 
 
 

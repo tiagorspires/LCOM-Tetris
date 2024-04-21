@@ -72,6 +72,9 @@ int (video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, u
         for (int j = 0; j < no_rectangles; j++) {
             uint32_t color;
             if (mode_info.MemoryModel == DIRECT_COLOR_MODE) {
+              // Extract initial color components from 'first' by right-shifting to align with their respective field positions and applying a bitmask to filter by mask size. 
+              // The extracted components are then adjusted by adding a calculated offset based on their position and a step value, with modulus to ensure values wrap within the allowed range.
+
                 uint8_t R = (first >> mode_info.RedFieldPosition) & ((1 << mode_info.RedMaskSize) - 1);
                 uint8_t G = (first >> mode_info.GreenFieldPosition) & ((1 << mode_info.GreenMaskSize) - 1);
                 uint8_t B = (first >> mode_info.BlueFieldPosition) & ((1 << mode_info.BlueMaskSize) - 1);
@@ -99,17 +102,17 @@ int (video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, u
 
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u): under construction\n", __func__, xpm, x, y);
-
-  return 1;
+  if (set_frame_buffer(0x105) != 0 || set_video_mode(0x105) != 0) return 1;
+  if (draw_xpm(x, y,xpm) != 0) return 1;
+  if(escape_key()) return 1;
+  if (vg_exit() != 0) return 1;
+  return 0;
 }
 
 int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,
                      int16_t speed, uint8_t fr_rate) {
-  /* To be completed */
-  printf("%s(%8p, %u, %u, %u, %u, %d, %u): under construction\n",
-         __func__, xpm, xi, yi, xf, yf, speed, fr_rate);
+
+
 
   return 1;
 }
