@@ -103,6 +103,47 @@ int normalize_color(uint32_t color, uint32_t *new_color) {
     return 0;
 }
 
+// modo indexado
+
+uint32_t (indexed_mode)(uint16_t col, uint16_t row, uint8_t step, uint32_t first, uint8_t n) {
+    // Calcular a posição linear baseada na linha e coluna.
+    // 'row * n' calcula a progressão linear ao longo das linhas,
+    // e 'col' adiciona a progressão ao longo das colunas.
+    uint32_t linear_position = row * n + col;
+
+    // Multiplicar a posição linear pelo 'step' para aumentar
+    // o índice de cor de forma mais rápida ou para criar um padrão de cor.
+    uint32_t index_increment = linear_position * step;
+
+    // Adicionar o valor inicial 'first' para definir o ponto de partida do índice de cor.
+    // Isso permite que a primeira cor na paleta possa ser ajustada.
+    uint32_t base_index = first + index_increment;
+
+    // Aplicar a operação de módulo para garantir que o índice de cor não exceda
+    // o número máximo de cores disponíveis, que é determinado por 'BitsPerPixel'.
+    uint32_t max_colors = 1 << mode_info.BitsPerPixel;
+    uint32_t final_index = base_index % max_colors;
+
+    // Retorna o índice final de cor, que será usado para buscar a cor na paleta.
+    return final_index;
+}
+
+
+uint32_t direct_mode(uint8_t red, uint8_t green, uint8_t blue) {
+    // Aplica as máscaras de bits e desloca cada cor para a sua posição correta
+    uint32_t red_component = ((uint32_t)red & ((1U << mode_info.RedMaskSize) - 1U)) << mode_info.RedFieldPosition;
+    uint32_t green_component = ((uint32_t)green & ((1U << mode_info.GreenMaskSize) - 1U)) << mode_info.GreenFieldPosition;
+    uint32_t blue_component = ((uint32_t)blue & ((1U << mode_info.BlueMaskSize) - 1U)) << mode_info.BlueFieldPosition;
+
+    // Retorna a combinação dos componentes de cor em um único valor de 32 bits
+    return red_component | green_component | blue_component;
+}
+
+
+
+
+
+
 
 
 

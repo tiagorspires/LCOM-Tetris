@@ -55,13 +55,48 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
 
 }
 
-int(video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
-  /* To be completed */
-  printf("%s(0x%03x, %u, 0x%08x, %d): under construction\n", __func__,
-         mode, no_rectangles, first, step);
 
-  return 1;
+
+
+
+int (video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
+    // Initialize the mode and framebuffer
+    if (set_frame_buffer(mode) != 0 || set_video_mode(mode) != 0) {
+        return 1;
+    }
+
+    int vertical = mode_info.YResolution / no_rectangles;
+    int horizontal = mode_info.XResolution / no_rectangles;
+
+    for (int i = 0; i < no_rectangles; i++) {
+        for (int j = 0; j < no_rectangles; j++) {
+            uint32_t color;
+            if (mode_info.MemoryModel == DIRECT_COLOR_MODE) {
+                uint8_t R = (first >> mode_info.RedFieldPosition) & ((1 << mode_info.RedMaskSize) - 1);
+                uint8_t G = (first >> mode_info.GreenFieldPosition) & ((1 << mode_info.GreenMaskSize) - 1);
+                uint8_t B = (first >> mode_info.BlueFieldPosition) & ((1 << mode_info.BlueMaskSize) - 1);
+                R = (R + j * step) % (1 << mode_info.RedMaskSize);
+                G = (G + i * step) % (1 << mode_info.GreenMaskSize);
+                B = (B + (i + j) * step) % (1 << mode_info.BlueMaskSize);
+
+                color = direct_mode(R, G, B);
+            } else {
+                color = indexed_mode(j, i, step, first, no_rectangles);
+            }
+
+            if (draw_rectangle(j * horizontal, i * vertical, horizontal, vertical, color)) {
+                return 1;
+            }
+        }
+    }
+
+    if(escape_key()) return 1;
+
+    if (vg_exit() != 0) return 1;
+
+    return 0;
 }
+
 
 int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
   /* To be completed */
