@@ -170,7 +170,10 @@ for (int i = 0; i < image.height; i++){
 return 0;
 }
 
-
+int (clean_buffer) (){
+    memset(video_mem, 0, get_frame_buffer_size());
+    return 0;
+}
 
 
 

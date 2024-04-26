@@ -14,7 +14,6 @@ extern int counter;
 
 extern uint8_t scancode;
 
-/*
 
 static char *i_piece_scaled_xpm[] = {
 "40 40 1",  // Width, Height, Number of Colors
@@ -61,7 +60,7 @@ static char *i_piece_scaled_xpm[] = {
 "cccccccccccccccccccccccccccccccccccccccc"
 };
 
-*/
+
 
 
 
@@ -69,8 +68,8 @@ static char *i_piece_scaled_xpm[] = {
 
 int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
-  lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
-  lcf_log_output("/home/lcom/labs/proj/output.txt");
+ // lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
+  //lcf_log_output("/home/lcom/labs/proj/output.txt");
   if (lcf_start(argc, argv)) return 1;
   lcf_cleanup();
   return 0;
@@ -78,8 +77,8 @@ int main(int argc, char *argv[]) {
 
 int (proj_main_loop) (int argc, char **argv) {
 
-   // if(set_frame_buffer(0x105)) return 1;
-  //if(set_video_mode(0x105)) return 1;
+   if(set_frame_buffer(0x105)) return 1;
+   if(set_video_mode(0x105)) return 1;
 
     if(timer_set_frequency(0, 30)) return 1;
     int ipc_status;
@@ -88,12 +87,13 @@ int (proj_main_loop) (int argc, char **argv) {
 
     if(keyboard_subscribe(&irq_set_keyboard)) return 1;
     if(timer_subscribe_int(&irq_set_timer)) return 1;
-    int buffer = 10, r;
+    int r;
+   // int buffer = 10;
     int x = 500, y = 100;
-   // if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+    if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
 
 
-       while (scancode != ESC_BREAK_CODE || buffer > 0) { 
+       while (scancode != ESC_BREAK_CODE) { 
         if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
             printf("driver_receive failed with: %d", r);
             continue;
@@ -104,9 +104,9 @@ int (proj_main_loop) (int argc, char **argv) {
                 if (msg.m_notify.interrupts & irq_set_timer) { /* subscribed interrupt */
                 timer_int_handler();
                 if (counter%1000==0) {
-                    buffer--;
-                   // if(draw_xpm(x, 100, (xpm_map_t) i_piece_scaled_xpm)) return 1;
-                   // x+=100;   
+                    //buffer--;
+                   //if(draw_xpm(x, 100, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                   //x+=100;   
                 }
                 }
                 if (msg.m_notify.interrupts & irq_set_keyboard) {
@@ -115,22 +115,27 @@ int (proj_main_loop) (int argc, char **argv) {
                     {
                     case A_BREAK_CODE:
                       x-=100;
-                      printf("%x", scancode);
-                     // if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                      //printf("%x", scancode);
+                     clean_buffer();
+                     if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
                       break;
                     case D_BREAK_CODE:
                       x+=100;
-                      printf("%x", scancode);
-                     // if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                      //printf("%x", scancode);
+                      clean_buffer();
+                     if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
                       break;
                     case S_BREAK_CODE:
                       y+=100;
-                      printf("%x", scancode);
-                     // if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                      //printf("%x", scancode);
+                      clean_buffer();
+                     if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                      break;
                     case W_BREAK_CODE:
                       y-=100;
-                      printf("%x", scancode);
-                     // if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                      //printf("%x", scancode);
+                      clean_buffer();
+                     if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
                       break;
                     default:
                       break;
@@ -150,8 +155,8 @@ int (proj_main_loop) (int argc, char **argv) {
     if (timer_unsubscribe_int()) return 1;
     if (keyboard_unsubscribe()) return 1;
 
-    // if(escape_key()) return 1;
-    //if(vg_exit()) return 1;
+    if(escape_key()) return 1;
+    if(vg_exit()) return 1;
     
     return 0;
 }
