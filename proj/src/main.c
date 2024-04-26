@@ -12,112 +12,56 @@
 
 extern int counter;
 
+extern uint8_t scancode;
+
+/*
+
 static char *i_piece_scaled_xpm[] = {
-"32 100 2",  // Width, Height, Number of Colors
-". 0",       // Background
-"c 1",       // Cyan color
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc",
-"cccccccccccccccccccccccccccccccc"
+"40 40 1",  // Width, Height, Number of Colors
+"c 1",      // Cyan color
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc",
+"cccccccccccccccccccccccccccccccccccccccc"
 };
 
+*/
 
 
 
@@ -134,18 +78,22 @@ int main(int argc, char *argv[]) {
 
 int (proj_main_loop) (int argc, char **argv) {
 
-    if(set_frame_buffer(0x105)) return 1;
-    if(set_video_mode(0x105)) return 1;
+   // if(set_frame_buffer(0x105)) return 1;
+  //if(set_video_mode(0x105)) return 1;
 
     if(timer_set_frequency(0, 30)) return 1;
     int ipc_status;
-    uint8_t irq_set;
+    uint8_t irq_set_timer, irq_set_keyboard;
     message msg;
 
-    if(timer_subscribe_int(&irq_set)) return 1;
+    if(keyboard_subscribe(&irq_set_keyboard)) return 1;
+    if(timer_subscribe_int(&irq_set_timer)) return 1;
     int buffer = 10, r;
-    int x = 0;
-    while (buffer) { 
+    int x = 500, y = 100;
+   // if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+
+
+       while (scancode != ESC_BREAK_CODE || buffer > 0) { 
         if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
             printf("driver_receive failed with: %d", r);
             continue;
@@ -153,13 +101,40 @@ int (proj_main_loop) (int argc, char **argv) {
         if (is_ipc_notify(ipc_status)) { /* received notification */
             switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE: /* hardware interrupt notification */
-                if (msg.m_notify.interrupts & irq_set) { /* subscribed interrupt */
+                if (msg.m_notify.interrupts & irq_set_timer) { /* subscribed interrupt */
                 timer_int_handler();
-                if (counter%60==0) {
+                if (counter%1000==0) {
                     buffer--;
-                    if(draw_xpm(x, 100, (xpm_map_t) i_piece_scaled_xpm)) return 1;
-                    x+=100;   
+                   // if(draw_xpm(x, 100, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                   // x+=100;   
                 }
+                }
+                if (msg.m_notify.interrupts & irq_set_keyboard) {
+                    kbc_ih_keyboard();
+                    switch (scancode)
+                    {
+                    case A_BREAK_CODE:
+                      x-=100;
+                      printf("%x", scancode);
+                     // if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                      break;
+                    case D_BREAK_CODE:
+                      x+=100;
+                      printf("%x", scancode);
+                     // if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                      break;
+                    case S_BREAK_CODE:
+                      y+=100;
+                      printf("%x", scancode);
+                     // if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                    case W_BREAK_CODE:
+                      y-=100;
+                      printf("%x", scancode);
+                     // if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
+                      break;
+                    default:
+                      break;
+                    }
                 }
                 break;
             default:
@@ -169,10 +144,15 @@ int (proj_main_loop) (int argc, char **argv) {
             /* no standard messages expected: do nothing */
         }
 }
-  if (timer_unsubscribe_int()) return 1;
+    printf("Exiting\n");
+    printf("%x", scancode);
 
-    if(escape_key()) return 1;
-    if(vg_exit()) return 1;
+    if (timer_unsubscribe_int()) return 1;
+    if (keyboard_unsubscribe()) return 1;
+
+    // if(escape_key()) return 1;
+    //if(vg_exit()) return 1;
+    
     return 0;
 }
 

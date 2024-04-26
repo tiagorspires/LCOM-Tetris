@@ -21,6 +21,13 @@
 #define DELAY_US 20000
 
 #define ESC_BREAK_CODE 0x81
+#define A_BREAK_CODE 0x9E
+#define S_BREAK_CODE 0x9F
+#define D_BREAK_CODE 0xA0
+#define Q_BREAK_CODE 0x90
+#define W_BREAK_CODE 0x91
+#define E_BREAK_CODE 0x92
+
 #define TWO_BYTES 0XE0
 
 #define BREAK_CODE BIT(7)
