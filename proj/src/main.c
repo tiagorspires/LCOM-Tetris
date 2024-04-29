@@ -16,12 +16,75 @@ extern uint8_t scancode;
 
 int main(int argc, char *argv[]) {
   lcf_set_language("EN-US");
- // lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
+  //lcf_trace_calls("/home/lcom/labs/proj/trace.txt");
   //lcf_log_output("/home/lcom/labs/proj/output.txt");
   if (lcf_start(argc, argv)) return 1;
   lcf_cleanup();
   return 0;
 }
+
+static void move_left(char screen[32][24], CharColorMap *colorMap, int mapSize)
+{
+    for(int i = 0; i < 32; i++) {
+        for(int j = 0; j < 24; j++) {
+            if(screen[i][j] == 'T') {
+                screen[i][j] = '-';
+                screen[i][j-1] = 'T';
+            }
+        }
+    }
+    
+}
+
+static void move_right(char screen[32][24], CharColorMap *colorMap, int mapSize)
+{
+        for(int i = 0; i < 32; i++) {
+            for(int j = 23; j >= 0; j--) { // Iterar da direita para a esquerda
+                if(screen[i][j] == 'T') {
+                    screen[i][j] = '-';
+                    if (j < 23) screen[i][j+1] = 'T'; // Move para a direita
+                }
+            }
+        }          
+}
+
+static void move_down(char screen[32][24], CharColorMap *colorMap, int mapSize)
+{
+    for(int i = 31; i >= 0; i--) { // Iterar de baixo para cima
+        for(int j = 0; j < 24; j++) {
+            if(screen[i][j] == 'T') {
+                screen[i][j] = '-';
+                if (i < 31) screen[i+1][j] = 'T'; // Mover para baixo
+            }
+        }
+    }
+}
+
+static void move_up(char screen[32][24], CharColorMap *colorMap, int mapSize)
+{
+    for(int i = 0; i < 32; i++) {
+        for(int j = 0; j < 24; j++) {
+            if(screen[i][j] == 'T') {
+                screen[i][j] = '-';
+                screen[i-1][j] = 'T';
+            }
+        }
+    }
+}
+
+static void draw(char screen[32][24], CharColorMap *colorMap, int mapSize)
+{
+    clean_buffer();
+    for (int i = 0; i < 32; i++) {
+        for (int j = 0; j < 24; j++) {
+            int colorIndex = getColorIndex(screen[i][j], colorMap, mapSize); // 
+            if (colorIndex != -1) { 
+                draw_rectangle(j * 32, i * 32, 32, 32, colorIndex);
+            }
+        }
+    }
+}
+
 
 int (proj_main_loop) (int argc, char **argv) {
 
@@ -70,6 +133,7 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
    if(set_frame_buffer(0x105)) return 1;
    if(set_video_mode(0x105)) return 1;
 
+    
 
   for (int i = 0; i < 32; i++) {
         for (int j = 0; j < 24; j++) {
@@ -98,13 +162,39 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
         }
         if (is_ipc_notify(ipc_status)) { /* received notification */
             switch (_ENDPOINT_P(msg.m_source)) {
-            case HARDWARE:
+            case HARDWARE: /* hardware interrupt notification */
                 if (msg.m_notify.interrupts & irq_set_keyboard) {
                     kbc_ih_keyboard();
+                    switch (scancode)
+                    {
+                    case A_BREAK_CODE:
+                        move_left(screen, colorMap, mapSize);
+                        break;
+                    
+                    case D_BREAK_CODE:
+                        move_right(screen, colorMap, mapSize);
+                        break;
+                    
+                    case S_BREAK_CODE:
+                        move_down(screen, colorMap, mapSize);
+                        break;
+                    case W_BREAK_CODE:
+                        move_up(screen, colorMap, mapSize);
+                        break;
+
+                    default:
+                      break;
+                    }
                 }
+                break;
+            default:
+                break; /* no other notifications expected: do nothing */
             }
+            draw(screen, colorMap, mapSize);
+        } else { 
         }
-    }
+}
+
  
 
     //if (timer_unsubscribe_int()) return 1;
@@ -115,65 +205,4 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
     
     return 0;
 }
-
-/*
-      while (scancode != ESC_BREAK_CODE) { 
-        if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
-            printf("driver_receive failed with: %d", r);
-            continue;
-        }
-        if (is_ipc_notify(ipc_status)) { 
-            switch (_ENDPOINT_P(msg.m_source)) {
-            case HARDWARE: 
-                if (msg.m_notify.interrupts & irq_set_timer) { 
-                timer_int_handler();
-                if (counter%1000==0) {
-                    //buffer--;
-                   //if(draw_xpm(x, 100, (xpm_map_t) i_piece_scaled_xpm)) return 1;
-                   //x+=100;   
-                }
-                }
-                if (msg.m_notify.interrupts & irq_set_keyboard) {
-                    kbc_ih_keyboard();
-                    switch (scancode)
-                    {
-                    case A_BREAK_CODE:
-                      x-=100;
-                      //printf("%x", scancode);
-                     clean_buffer();
-                     if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
-                      break;
-                    case D_BREAK_CODE:
-                      x+=100;
-                      //printf("%x", scancode);
-                      clean_buffer();
-                     if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
-                      break;
-                    case S_BREAK_CODE:
-                      y+=100;
-                      //printf("%x", scancode);
-                      clean_buffer();
-                     if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
-                      break;
-                    case W_BREAK_CODE:
-                      y-=100;
-                      //printf("%x", scancode);
-                      clean_buffer();
-                     if(draw_xpm(x, y, (xpm_map_t) i_piece_scaled_xpm)) return 1;
-                      break;
-                    default:
-                      break;
-                    }
-                }
-                break;
-            default:
-                break; 
-            }
-        } else { 
-            
-        }
-}
-*/
-
-
 
