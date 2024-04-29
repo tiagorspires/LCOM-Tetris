@@ -60,17 +60,6 @@ static void move_down(char screen[32][24], CharColorMap *colorMap, int mapSize)
     }
 }
 
-static void move_up(char screen[32][24], CharColorMap *colorMap, int mapSize)
-{
-    for(int i = 0; i < 32; i++) {
-        for(int j = 0; j < 24; j++) {
-            if(screen[i][j] == 'T') {
-                screen[i][j] = '-';
-                screen[i-1][j] = 'T';
-            }
-        }
-    }
-}
 
 static void draw(char screen[32][24], CharColorMap *colorMap, int mapSize)
 {
@@ -144,13 +133,13 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
         }
     }
 
-    //if(timer_set_frequency(0, 30)) return 1;
+    if(timer_set_frequency(0, 30)) return 1;
     int ipc_status;
     uint8_t irq_set_keyboard;
-    //uint8_t irq_set_timer;
+    uint8_t irq_set_timer;
     message msg;
 
-    //if(timer_subscribe_int(&irq_set_timer)) return 1;
+    if(timer_subscribe_int(&irq_set_timer)) return 1;
     int r;
 
     if(keyboard_subscribe(&irq_set_keyboard)) return 1;
@@ -163,6 +152,13 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
         if (is_ipc_notify(ipc_status)) { /* received notification */
             switch (_ENDPOINT_P(msg.m_source)) {
             case HARDWARE: /* hardware interrupt notification */
+
+                if (msg.m_notify.interrupts & irq_set_timer) {
+                    timer_int_handler();
+                    if (counter % 60 == 0) {
+                        move_down(screen, colorMap, mapSize);
+                    }
+                }
                 if (msg.m_notify.interrupts & irq_set_keyboard) {
                     kbc_ih_keyboard();
                     switch (scancode)
@@ -177,9 +173,6 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
                     
                     case S_BREAK_CODE:
                         move_down(screen, colorMap, mapSize);
-                        break;
-                    case W_BREAK_CODE:
-                        move_up(screen, colorMap, mapSize);
                         break;
 
                     default:
@@ -197,7 +190,7 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
 
  
 
-    //if (timer_unsubscribe_int()) return 1;
+    if (timer_unsubscribe_int()) return 1;
     if (keyboard_unsubscribe()) return 1;
 
     if(escape_key()) return 1;
