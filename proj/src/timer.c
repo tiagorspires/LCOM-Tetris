@@ -68,34 +68,4 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
   return 0;
 }
 
-int (timer_display_conf)(uint8_t timer, uint8_t conf,
-                        enum timer_status_field field) {
-  union timer_status_field_val data;
-  switch (field)
-  {
-  case tsf_all:
-    data.byte = conf;
-    break;
-  case tsf_initial:
-    conf = conf >> 4;
-    if (conf == 1) data.in_mode = LSB_only;
-    else if (conf == 2) data.in_mode = MSB_only;
-    else if (conf == 3) data.in_mode = MSB_after_LSB;
-    else data.in_mode = INVAL_val;
-    break;
-  case tsf_mode:
-    conf = (conf >> 1) & 0x07;
 
-    if (conf == 6) data.count_mode = 2;
-    else if (conf == 7) data.count_mode = 3;
-    else data.count_mode = conf;
-    break;
-  case tsf_base:
-    data.bcd = conf & TIMER_BCD;
-    break;
-  default:
-    return 1;
-  }
-  if(timer_print_config(timer, field, data)!=0) return 1;
-  return 0;
-}
