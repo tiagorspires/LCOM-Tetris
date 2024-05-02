@@ -21,94 +21,92 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-// Function to find the leftmost column that the piece occupies
-static int find_leftmost(char screen[24][32]) {
-    for (int j = 0; j < 32; j++) {
-        for (int i = 0; i < 24; i++) {
-            if (screen[i][j] == 'T') {
-                return j;
-            }
-        }
+typedef struct {
+    char type;            // Character representing the type of the piece ('T', 'I', 'L', etc.)
+    int position[4][2];   // Array of (x, y) positions for each of the 4 blocks making up the piece
+    int pivot;         // Index of the pivot block for rotation (if applicable)
+} TetrisPiece;
+
+
+TetrisPiece create_piece(char type, int startX, int startY, int color) {
+    TetrisPiece piece;
+    piece.type = type;
+    switch (type) {
+        case 'T':  
+            piece.position[0][0] = startX;     piece.position[0][1] = startY;
+            piece.position[1][0] = startX + 1; piece.position[1][1] = startY;
+            piece.position[2][0] = startX + 2; piece.position[2][1] = startY;
+            piece.position[3][0] = startX + 1; piece.position[3][1] = startY + 1;
+            piece.pivot = 1; // Central block as pivot
+            break;
+        case 'I':  
+            piece.position[0][0] = startX; piece.position[0][1] = startY;
+            piece.position[1][0] = startX; piece.position[1][1] = startY + 1;
+            piece.position[2][0] = startX; piece.position[2][1] = startY + 2;
+            piece.position[3][0] = startX; piece.position[3][1] = startY + 3;
+            piece.pivot = 1; // Second block as pivot
+            break;
+
+        case 'L':  
+            piece.position[0][0] = startX;     piece.position[0][1] = startY;
+            piece.position[1][0] = startX;     piece.position[1][1] = startY + 1;
+            piece.position[2][0] = startX;     piece.position[2][1] = startY + 2;
+            piece.position[3][0] = startX + 1; piece.position[3][1] = startY + 2;
+            piece.pivot = 1; // Second block as pivot
+            break;
+        // Define other cases for different piece types
     }
-    return -1; // Return -1 if the piece is not found
+    return piece;
 }
 
-// Function to find the rightmost column that the piece occupies
-static int find_rightmost(char screen[24][32]) {
-    for (int j = 31; j >= 0; j--) {
-        for (int i = 0; i < 24; i++) {
-            if (screen[i][j] == 'T') {
-                return j;
-            }
-        }
-    }
-    return -1; // Return -1 if the piece is not found
+
+// generate a piece with a random type on the top of the screen at a random position
+
+TetrisPiece generate_random_piece() {
+    char types[] = {'T', 'I', 'L'};
+    char type = types[rand() % 3];
+    int startX = rand() % 30 + 1;  // Random x position between 1 and 30
+    return create_piece(type, startX, 1, 1);
 }
 
-// Function to find the bottommost row that the piece occupies
-static int find_bottommost(char screen[24][32]) {
-    for (int i = 23; i >= 0; i--) {
-        for (int j = 0; j < 32; j++) {
-            if (screen[i][j] == 'T') {
-                return i;
-            }
-        }
-    }
-    return -1;  // Return -1 if the piece is not found
-}
-
-// Function to check if the piece can move to the left, right or down
-static bool can_move(char screen[24][32], CharColorMap *colorMap, int mapSize, int i, int j) {
-    if (i < 0 || i >= 24 || j < 0 || j >= 32 || screen[i][j] == 'B') return false;
-    return true;
-}
-
-// Function to move the piece to the left and check if it can move
-static void move_left(char screen[24][32], CharColorMap *colorMap, int mapSize) {
-    int leftmost = find_leftmost(screen);
-    for (int i = 0; i < 24; i++) {
-        if (leftmost > 0 && can_move(screen, colorMap, mapSize, i, leftmost - 1)) {
-            for (int j = 0; j < 32; j++) {
-                if (screen[i][j] == 'T') {
-                    screen[i][j] = '-';
-                    screen[i][j - 1] = 'T'; // Move to the left
-                }
-            }
-        }
+static void copy_piece_to_screen(TetrisPiece *piece, char screen[24][32]) {
+    for (int i = 0; i < 4; i++) {
+        screen[piece->position[i][1]][piece->position[i][0]] = piece->type;
     }
 }
 
-// Function to move the piece to the right and check if it can move
-static void move_right(char screen[24][32], CharColorMap *colorMap, int mapSize) {
-    int rightmost = find_rightmost(screen);
-    for (int i = 0; i < 24; i++) {
-        if (rightmost < 31 && can_move(screen, colorMap, mapSize, i, rightmost + 1)) {
-            for (int j = 31; j >= 0; j--) {
-                if (screen[i][j] == 'T') {
-                    screen[i][j] = '-';
-                    screen[i][j + 1] = 'T'; // Move to the right
-                }
-            }
+
+void move_piece(TetrisPiece *piece, int deltaX, int deltaY, char screen[24][32]) {
+    // First, clear the current position of the piece on the screen
+    for (int i = 0; i < 4; i++) {
+        screen[piece->position[i][1]][piece->position[i][0]] = '-';
+    }
+
+    // Check if the move is possible
+    for (int i = 0; i < 4; i++) {
+        int newX = piece->position[i][0] + deltaX;
+        int newY = piece->position[i][1] + deltaY;
+        if (newX < 0 || newX >= 32 || newY < 0 || newY >= 24 || screen[newY][newX] == 'B') {
+            // If move is not possible, restore the old position and return
+            copy_piece_to_screen(piece, screen);
+            return;
         }
     }
-}
 
-// Function to move the piece down and check if it can move
-static void move_down(char screen[24][32], CharColorMap *colorMap, int mapSize) {
-    int bottommost = find_bottommost(screen);
-    for (int j = 0; j < 32; j++) {
-        if (bottommost < 23 && can_move(screen, colorMap, mapSize, bottommost + 1, j)) {
-            for (int i = 23; i >= 0; i--) {
-                if (screen[i][j] == 'T') {
-                    screen[i][j] = '-';
-                    screen[i + 1][j] = 'T'; // Move down
-                }
-            }
-        }
+    // Update the position in the piece structure
+    for (int i = 0; i < 4; i++) {
+        piece->position[i][0] += deltaX;
+        piece->position[i][1] += deltaY;
     }
+
+    // Stamp the new position of the piece on the screen
+    copy_piece_to_screen(piece, screen);
 }
 
-// Function to draw the screen
+
+
+
+
 static void draw(char screen[24][32], CharColorMap *colorMap, int mapSize) {
     clean_buffer();
     for (int i = 0; i < 24; i++) {
@@ -119,8 +117,8 @@ static void draw(char screen[24][32], CharColorMap *colorMap, int mapSize) {
             }
         }
     }
+    
 }
-
 
 int (proj_main_loop) (int argc, char **argv) {
 
@@ -130,6 +128,8 @@ int (proj_main_loop) (int argc, char **argv) {
         {'L', 3},
         {'B', 7}
     };
+
+    TetrisPiece piece = create_piece('T', 2, 2, 1);
 
     int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
 
@@ -145,7 +145,7 @@ int (proj_main_loop) (int argc, char **argv) {
     }
 
     // Adding example Tetris pieces on the screen
-    screen[5][10] = 'T'; screen[5][11] = 'T'; screen[5][12] = 'T'; screen[6][11] = 'T';
+    //screen[5][10] = 'T'; screen[5][11] = 'T'; screen[5][12] = 'T'; screen[6][11] = 'T';
     // screen[10][15] = 'I'; screen[11][15] = 'I'; screen[12][15] = 'I'; screen[13][15] = 'I';
     // screen[20][5] = 'L'; screen[21][5] = 'L'; screen[22][5] = 'L'; screen[22][6] = 'L';
     // screen[15][3] = 'L'; screen[16][3] = 'L'; screen[17][3] = 'L'; screen[15][4] = 'L';
@@ -175,7 +175,7 @@ int (proj_main_loop) (int argc, char **argv) {
                 if (msg.m_notify.interrupts & irq_set_timer) {
                     timer_int_handler();
                     if (counter % 60 == 0) {
-                    move_down(screen, colorMap, mapSize);
+                    move_piece(&piece, 0, 1, screen);
                     }
                 }
 
@@ -184,15 +184,15 @@ int (proj_main_loop) (int argc, char **argv) {
                     switch (scancode)
                     {
                     case A_BREAK_CODE:
-                        move_left(screen, colorMap, mapSize);
+                          move_piece(&piece, -1, 0, screen);
                         break;
                     
                     case D_BREAK_CODE:
-                        move_right(screen, colorMap, mapSize);
+                       move_piece(&piece, 1, 0, screen);
                         break;
                     
                     case S_BREAK_CODE:
-                        move_down(screen, colorMap, mapSize);
+                        move_piece(&piece, 0, 1, screen);
                         break;
 
                     default:
