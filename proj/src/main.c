@@ -54,9 +54,29 @@ TetrisPiece create_piece(char type, int startX, int startY, int color) {
             piece.position[3][0] = startX + 1; piece.position[3][1] = startY + 2;
             piece.pivot = 1; // Second block as pivot
             break;
-        // Define other cases for different piece types
+        
+        case 'Z':  
+            piece.position[0][0] = startX;     piece.position[0][1] = startY;
+            piece.position[1][0] = startX + 1; piece.position[1][1] = startY;
+            piece.position[2][0] = startX + 1; piece.position[2][1] = startY + 1;
+            piece.position[3][0] = startX + 2; piece.position[3][1] = startY + 1;
+            piece.pivot = 1; // Second block as pivot
+            break;
+        
     }
     return piece;
+}
+
+
+// check is the piece arrived at the bottom of the screen
+
+bool is_piece_at_bottom(TetrisPiece *piece, char screen[24][32]) {
+    for (int i = 0; i < 4; i++) {
+        if (piece->position[i][1] == 23 || screen[piece->position[i][1] + 1][piece->position[i][0]] == 'B') {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -126,10 +146,18 @@ int (proj_main_loop) (int argc, char **argv) {
         {'T', 1},
         {'I', 2},
         {'L', 3},
-        {'B', 7}
+        {'B', 7},
+        {'Z', 4}      
     };
 
-    TetrisPiece piece = create_piece('T', 2, 2, 1);
+    // array of pieces
+
+    TetrisPiece pieces[50]; 
+
+    // generate the first piece
+
+    TetrisPiece piece = generate_random_piece();
+    pieces[0] = piece;
 
     int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
 
@@ -162,8 +190,8 @@ int (proj_main_loop) (int argc, char **argv) {
 
     if(timer_subscribe_int(&irq_set_timer)) return 1;
     if(keyboard_subscribe(&irq_set_keyboard)) return 1;
-
-    while (scancode != ESC_BREAK_CODE) { 
+    int countpiece = 1;
+    while (scancode != ESC_BREAK_CODE && countpiece < 50) { 
         if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
             printf("driver_receive failed with: %d", r);
             continue;
@@ -175,7 +203,14 @@ int (proj_main_loop) (int argc, char **argv) {
                 if (msg.m_notify.interrupts & irq_set_timer) {
                     timer_int_handler();
                     if (counter % 60 == 0) {
-                    move_piece(&piece, 0, 1, screen);
+                        if (is_piece_at_bottom(&piece, screen)) {
+                            piece = generate_random_piece();
+                            pieces[countpiece] = piece;
+                            countpiece++;
+                        } else {
+                            move_piece(&piece, 0, 1, screen);
+                        }
+                       
                     }
                 }
 
