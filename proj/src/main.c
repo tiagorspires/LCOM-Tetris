@@ -23,10 +23,12 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-static void move_left(char screen[32][24], CharColorMap *colorMap, int mapSize)
+
+
+static void move_left(char screen[24][32], CharColorMap *colorMap, int mapSize)
 {
-    for(int i = 0; i < 32; i++) {
-        for(int j = 0; j < 24; j++) {
+    for(int i = 0; i < 24; i++) {
+        for(int j = 0; j < 32; j++) {
             if(screen[i][j] == 'T') {
                 screen[i][j] = '-';
                 screen[i][j-1] = 'T';
@@ -36,36 +38,36 @@ static void move_left(char screen[32][24], CharColorMap *colorMap, int mapSize)
     
 }
 
-static void move_right(char screen[32][24], CharColorMap *colorMap, int mapSize)
+static void move_right(char screen[24][32], CharColorMap *colorMap, int mapSize)
 {
-        for(int i = 0; i < 32; i++) {
-            for(int j = 23; j >= 0; j--) { // Iterar da direita para a esquerda
+        for(int i = 0; i < 24; i++) {
+            for(int j = 31; j >= 0; j--) { // Iterar da direita para a esquerda
                 if(screen[i][j] == 'T') {
                     screen[i][j] = '-';
-                    if (j < 23) screen[i][j+1] = 'T'; // Move para a direita
+                    if (j < 31) screen[i][j+1] = 'T'; // Move para a direita
                 }
             }
         }          
 }
 
-static void move_down(char screen[32][24], CharColorMap *colorMap, int mapSize)
+static void move_down(char screen[24][32], CharColorMap *colorMap, int mapSize)
 {
-    for(int i = 31; i >= 0; i--) { // Iterar de baixo para cima
-        for(int j = 0; j < 24; j++) {
+    for(int i = 23; i >= 0; i--) { // Iterar de baixo para cima
+        for(int j = 0; j < 32; j++) {
             if(screen[i][j] == 'T') {
                 screen[i][j] = '-';
-                if (i < 31) screen[i+1][j] = 'T'; // Mover para baixo
+                if (i < 23) screen[i+1][j] = 'T'; // Mover para baixo
             }
         }
     }
 }
 
 
-static void draw(char screen[32][24], CharColorMap *colorMap, int mapSize)
+static void draw(char screen[24][32], CharColorMap *colorMap, int mapSize)
 {
     clean_buffer();
-    for (int i = 0; i < 32; i++) {
-        for (int j = 0; j < 24; j++) {
+    for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 32; j++) {
             int colorIndex = getColorIndex(screen[i][j], colorMap, mapSize); // 
             if (colorIndex != -1) { 
                 draw_rectangle(j * 32, i * 32, 32, 32, colorIndex);
@@ -86,9 +88,9 @@ int (proj_main_loop) (int argc, char **argv) {
 int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
 
     // Criando e inicializando a matriz de caracteres 32x24 para representar o layout da tela
-    char screen[32][24];
-    for (int i = 0; i < 32; i++) {
-        for (int j = 0; j < 24; j++) {
+    char screen[24][32];
+    for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 32; j++) {
             screen[i][j] = '-';
         }
     }
@@ -99,7 +101,8 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
     screen[5][11] = 'T';
     screen[5][12] = 'T';
     screen[6][11] = 'T';
-
+    //screen[31][23] = 'T'; // 
+    
     // Peça 'I'
     screen[10][15] = 'I';
     screen[11][15] = 'I';
@@ -124,8 +127,8 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
 
     
 
-  for (int i = 0; i < 32; i++) {
-        for (int j = 0; j < 24; j++) {
+  for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 32; j++) {
             int colorIndex = getColorIndex(screen[i][j], colorMap, mapSize); // Implemente essa função com base no seu mapeamento
             if (colorIndex != -1) { // Apenas desenha se houver uma cor válida (não é '-')
                 if (draw_rectangle(j * 32, i * 32, 32, 32, colorIndex) != 0) return 1;
@@ -155,8 +158,9 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
 
                 if (msg.m_notify.interrupts & irq_set_timer) {
                     timer_int_handler();
-                    if (counter % 60 == 0) {
-                        move_down(screen, colorMap, mapSize);
+                    if (counter % 30 == 0) {
+                       // move_down(screen, colorMap, mapSize);
+                        draw(screen, colorMap, mapSize);
                     }
                 }
                 if (msg.m_notify.interrupts & irq_set_keyboard) {
@@ -183,7 +187,7 @@ int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
             default:
                 break; /* no other notifications expected: do nothing */
             }
-            draw(screen, colorMap, mapSize);
+            //draw(screen, colorMap, mapSize);
         } else { 
         }
 }
