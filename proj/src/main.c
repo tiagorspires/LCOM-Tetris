@@ -30,7 +30,7 @@ static int find_leftmost(char screen[24][32]) {
             }
         }
     }
-    return -1;
+    return -1; // Return -1 if the piece is not found
 }
 
 // Function to find the rightmost column that the piece occupies
@@ -42,7 +42,7 @@ static int find_rightmost(char screen[24][32]) {
             }
         }
     }
-    return -1;
+    return -1; // Return -1 if the piece is not found
 }
 
 // Function to find the bottommost row that the piece occupies
@@ -59,7 +59,7 @@ static int find_bottommost(char screen[24][32]) {
 
 // Function to check if the piece can move to the left, right or down
 static bool can_move(char screen[24][32], CharColorMap *colorMap, int mapSize, int i, int j) {
-    if (i < 0 || i >= 24 || j < 0 || j >= 32) return false;
+    if (i < 0 || i >= 24 || j < 0 || j >= 32 || screen[i][j] == 'B') return false;
     return true;
 }
 
@@ -127,17 +127,22 @@ int (proj_main_loop) (int argc, char **argv) {
     CharColorMap colorMap[] = {
         {'T', 1},
         {'I', 2},
-        {'L', 3}
+        {'L', 3},
+        {'B', 7}
     };
 
     int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
 
     char screen[24][32];
-        for (int i = 0; i < 24; i++) {
-            for (int j = 0; j < 32; j++) {
+    for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 32; j++) {
+            if (i == 0 || i == 23 || j == 0 || j == 31) {
+                screen[i][j] = 'B';  // Fill the borders with 'B'
+            } else {
                 screen[i][j] = '-';
             }
         }
+    }
 
     // Adding example Tetris pieces on the screen
     screen[5][10] = 'T'; screen[5][11] = 'T'; screen[5][12] = 'T'; screen[6][11] = 'T';
