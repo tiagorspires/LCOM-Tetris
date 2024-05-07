@@ -110,10 +110,11 @@ bool is_piece_at_bottom(TetrisPiece *piece, char screen[24][32], int colorScreen
 TetrisPiece generate_random_piece() {
     char types[] = {'T', 'I', 'L', 'Z', 'S'};
     char type = types[rand() % 5];
-    // random start position between 15 and 20
-    int startX = rand() % 15 + 5;
+    // Random start position between column 1 and column 14
+    int startX = 5 + rand() % 5;
     return create_piece(type, startX, 1, 1);
 }
+
 
 static void copy_piece_to_screen(TetrisPiece *piece, char screen[24][32], int colorScreen[24][32]) {
     for (int i = 0; i < 4; i++) {
@@ -138,8 +139,9 @@ void move_piece(TetrisPiece *piece, int deltaX, int deltaY, char screen[24][32],
     for (int i = 0; i < 4; i++) {
         int newX = oldPositions[i][0] + deltaX;
         int newY = oldPositions[i][1] + deltaY;
-        
-        if (newX < 0 || newX >= 32 || newY < 0 || newY >= 24 || screen[newY][newX] != '-') {
+
+        // Ensure newX is within the column bounds of the gameplay area
+        if (newX < 1 || newX > 14 || newY < 1 || newY >= 24 || screen[newY][newX] != '-') {
             movePossible = false;
             break;
         }
@@ -161,30 +163,93 @@ void move_piece(TetrisPiece *piece, int deltaX, int deltaY, char screen[24][32],
         colorScreen[piece->position[i][1]][piece->position[i][0]] = piece->colorIndex;
     }
 
-
     copy_piece_to_screen(piece, screen, colorScreen);
 }
 
+// function to check if there is any to be deleted
 
+bool is_line_full(char screen[24][32], int line) {
+    for (int i = 1; i < 15; i++) {
+        if (screen[line][i] == '-') {
+            return false;
+        }
+    }
+    return true;
+}
 
 
 
 static void draw(char screen[24][32],int colorScreen[24][32]) {
     clean_buffer();
     
+    for (int i = 1; i < 23; i++) {
+        if (is_line_full(screen, i)) {
+            // actualize the entire line to '-' and color to 0
+            for (int j = 1; j < 15; j++) {
+                screen[i][j] = '-';
+                colorScreen[i][j] = 0;
+            }
+            //TODO:
+            // move all the lines above down
+        
+    }
+}
+    
     for (int i = 0; i < 24; i++) {
         for (int j = 0; j < 32; j++) {
             int colorIndex = colorScreen[i][j];
-            if(colorIndex > 0 && colorIndex < 6) 
+            // Draw gameplay blocks with respective colors
+            if (j < 15 && colorIndex > 0 && colorIndex < 6) {
                 draw_rectangle(j * 32, i * 32, 32, 32, colorIndex);
-            if(screen[i][j] == 'B') 
+            }
+            // Draw borders with color index 7
+            if (screen[i][j] == 'B') {
                 draw_rectangle(j * 32, i * 32, 32, 32, 7);
+            }
+            // Optionally handle non-playable area here if needed
         }
     }
-    
 }
 
 
+void rotate_piece(TetrisPiece *piece, char screen[24][32], int colorScreen[24][32]) {
+    if (piece->type == 'S') {
+        return;
+    }
+
+    int oldPositions[4][2];
+    for (int i = 0; i < 4; i++) {
+        oldPositions[i][0] = piece->position[i][0];
+        oldPositions[i][1] = piece->position[i][1];
+
+        screen[piece->position[i][1]][piece->position[i][0]] = '-';
+        colorScreen[piece->position[i][1]][piece->position[i][0]] = 0;
+    }
+
+    int pivotX = piece->position[piece->pivot][0];
+    int pivotY = piece->position[piece->pivot][1];
+
+    for (int i = 0; i < 4; i++) {
+        int newX = pivotX + pivotY - oldPositions[i][1];
+        int newY = pivotY - pivotX + oldPositions[i][0];
+
+        if (newX < 1 || newX > 14 || newY < 1 || newY >= 24 || screen[newY][newX] != '-') {
+            for (int j = 0; j < 4; j++) {
+                screen[oldPositions[j][1]][oldPositions[j][0]] = piece->type;
+                colorScreen[oldPositions[j][1]][oldPositions[j][0]] = piece->colorIndex;
+            }
+            return;
+        }
+    }
+
+    for (int i = 0; i < 4; i++) {
+        piece->position[i][0] = pivotX + pivotY - oldPositions[i][1];
+        piece->position[i][1] = pivotY - pivotX + oldPositions[i][0];
+
+        screen[piece->position[i][1]][piece->position[i][0]] = piece->type;
+        colorScreen[piece->position[i][1]][piece->position[i][0]] = piece->colorIndex;
+    }
+}
 
 
 int (proj_main_loop) (int argc, char **argv) {
@@ -205,14 +270,20 @@ int (proj_main_loop) (int argc, char **argv) {
     char screen[24][32];
     int colorScreen[24][32];
     for (int i = 0; i < 24; i++) {
-        for (int j = 0; j < 32; j++) {
-            if (i == 0 || i == 23 || j == 0 || j == 31) {
-                screen[i][j] = 'B';  // Fill the borders with 'B'
-            } else {
-                screen[i][j] = '-';
-            }
+    for (int j = 0; j < 32; j++) {
+        if (j == 0 || j >=14 || i == 0 || i == 23) {  // Define borders outside gameplay area
+            screen[i][j] = 'B';  // Fill the borders with 'B'
+            colorScreen[i][j] = 7; // Color for border
+        } else if (j < 15) {
+            screen[i][j] = '-';
+            colorScreen[i][j] = 0;
+        } else {
+            screen[i][j] = ' ';  // Non-playable area remains empty or for other UI elements
+            colorScreen[i][j] = 0;
         }
     }
+}
+
 
 
         if(set_frame_buffer(0x105)) return 1;
@@ -264,6 +335,9 @@ int (proj_main_loop) (int argc, char **argv) {
                     
                     case S_BREAK_CODE:
                         move_piece(&piece, 0, 1, screen, colorScreen);
+                        break;
+                    case W_BREAK_CODE:
+                        rotate_piece(&piece, screen, colorScreen);
                         break;
 
                     default:
