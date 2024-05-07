@@ -22,13 +22,15 @@ int main(int argc, char *argv[]) {
 }
 
 typedef struct {
-    char type;            // Character representing the type of the piece ('T', 'I', 'L', etc.)
-    int position[4][2];   // Array of (x, y) positions for each of the 4 blocks making up the piece
-    int pivot;         // Index of the pivot block for rotation (if applicable)
+    char type;                // Character representing the type of the piece ('T', 'I', 'L', etc.)
+    int position[4][2];       
+    int pivot;                // Index of the pivot block for rotation (if applicable)
+    int colorIndex;           // Color index for drawing the piece
 } TetrisPiece;
 
 
-TetrisPiece create_piece(char type, int startX, int startY, int color) {
+
+TetrisPiece create_piece(char type, int startX, int startY, int colorIndex) {
     TetrisPiece piece;
     piece.type = type;
     switch (type) {
@@ -38,13 +40,16 @@ TetrisPiece create_piece(char type, int startX, int startY, int color) {
             piece.position[2][0] = startX + 2; piece.position[2][1] = startY;
             piece.position[3][0] = startX + 1; piece.position[3][1] = startY + 1;
             piece.pivot = 1; // Central block as pivot
+            piece.colorIndex = 1;
+
             break;
         case 'I':  
             piece.position[0][0] = startX; piece.position[0][1] = startY;
             piece.position[1][0] = startX; piece.position[1][1] = startY + 1;
             piece.position[2][0] = startX; piece.position[2][1] = startY + 2;
             piece.position[3][0] = startX; piece.position[3][1] = startY + 3;
-            piece.pivot = 1; // Second block as pivot
+            piece.pivot = 1; 
+            piece.colorIndex = 2;
             break;
 
         case 'L':  
@@ -53,6 +58,7 @@ TetrisPiece create_piece(char type, int startX, int startY, int color) {
             piece.position[2][0] = startX;     piece.position[2][1] = startY + 2;
             piece.position[3][0] = startX + 1; piece.position[3][1] = startY + 2;
             piece.pivot = 1; // Second block as pivot
+            piece.colorIndex = 3;
             break;
         
         case 'Z':  
@@ -61,21 +67,40 @@ TetrisPiece create_piece(char type, int startX, int startY, int color) {
             piece.position[2][0] = startX + 1; piece.position[2][1] = startY + 1;
             piece.position[3][0] = startX + 2; piece.position[3][1] = startY + 1;
             piece.pivot = 1; // Second block as pivot
+            piece.colorIndex = 4;
             break;
         
+        case 'S': // square
+            piece.position[0][0] = startX;     piece.position[0][1] = startY;
+            piece.position[1][0] = startX + 1; piece.position[1][1] = startY;
+            piece.position[2][0] = startX;     piece.position[2][1] = startY + 1;
+            piece.position[3][0] = startX + 1; piece.position[3][1] = startY + 1;
+            piece.pivot = 0;
+            piece.colorIndex = 5;
+             
+            break;
     }
     return piece;
 }
 
 
-// check is the piece arrived at the bottom of the screen
+// check is the piece arrived at the bottom of the screen or if there is a block below it
 
-bool is_piece_at_bottom(TetrisPiece *piece, char screen[24][32]) {
+bool is_piece_at_bottom(TetrisPiece *piece, char screen[24][32], int colorScreen[24][32]) {
     for (int i = 0; i < 4; i++) {
-        if (piece->position[i][1] == 23 || screen[piece->position[i][1] + 1][piece->position[i][0]] == 'B') {
+        if (piece->position[i][1] == 23 || screen[piece->position[i][1] + 1][piece->position[i][0]] == 'B' ||screen[piece->position[i][1] + 1][piece->position[i][0]] == 'P') {
+            
+
+            for (int i = 0; i < 4; i++) {
+                colorScreen[piece->position[i][1]][piece->position[i][0]] = piece->colorIndex;
+                screen[piece->position[i][1]][piece->position[i][0]] = 'P';
+            }          
+            
             return true;
         }
-    }
+
+    }    
+    
     return false;
 }
 
@@ -83,72 +108,89 @@ bool is_piece_at_bottom(TetrisPiece *piece, char screen[24][32]) {
 // generate a piece with a random type on the top of the screen at a random position
 
 TetrisPiece generate_random_piece() {
-    char types[] = {'T', 'I', 'L'};
-    char type = types[rand() % 3];
-    int startX = rand() % 30 + 1;  // Random x position between 1 and 30
+    char types[] = {'T', 'I', 'L', 'Z', 'S'};
+    char type = types[rand() % 5];
+    // random start position between 15 and 20
+    int startX = rand() % 15 + 5;
     return create_piece(type, startX, 1, 1);
 }
 
-static void copy_piece_to_screen(TetrisPiece *piece, char screen[24][32]) {
+static void copy_piece_to_screen(TetrisPiece *piece, char screen[24][32], int colorScreen[24][32]) {
     for (int i = 0; i < 4; i++) {
+        colorScreen[piece->position[i][1]][piece->position[i][0]] = piece->colorIndex;
         screen[piece->position[i][1]][piece->position[i][0]] = piece->type;
     }
 }
 
 
-void move_piece(TetrisPiece *piece, int deltaX, int deltaY, char screen[24][32]) {
-    // First, clear the current position of the piece on the screen
+
+void move_piece(TetrisPiece *piece, int deltaX, int deltaY, char screen[24][32], int colorScreen[24][32]) {
+    int oldPositions[4][2];
     for (int i = 0; i < 4; i++) {
+        oldPositions[i][0] = piece->position[i][0];
+        oldPositions[i][1] = piece->position[i][1];
+
         screen[piece->position[i][1]][piece->position[i][0]] = '-';
+        colorScreen[piece->position[i][1]][piece->position[i][0]] = 0;
     }
 
-    // Check if the move is possible
+    bool movePossible = true;
     for (int i = 0; i < 4; i++) {
-        int newX = piece->position[i][0] + deltaX;
-        int newY = piece->position[i][1] + deltaY;
-        if (newX < 0 || newX >= 32 || newY < 0 || newY >= 24 || screen[newY][newX] == 'B') {
-            // If move is not possible, restore the old position and return
-            copy_piece_to_screen(piece, screen);
-            return;
+        int newX = oldPositions[i][0] + deltaX;
+        int newY = oldPositions[i][1] + deltaY;
+        
+        if (newX < 0 || newX >= 32 || newY < 0 || newY >= 24 || screen[newY][newX] != '-') {
+            movePossible = false;
+            break;
         }
     }
 
-    // Update the position in the piece structure
-    for (int i = 0; i < 4; i++) {
-        piece->position[i][0] += deltaX;
-        piece->position[i][1] += deltaY;
+    if (!movePossible) {
+        for (int i = 0; i < 4; i++) {
+            screen[oldPositions[i][1]][oldPositions[i][0]] = piece->type;
+            colorScreen[oldPositions[i][1]][oldPositions[i][0]] = piece->colorIndex;
+        }
+        return;
     }
 
-    // Stamp the new position of the piece on the screen
-    copy_piece_to_screen(piece, screen);
+    for (int i = 0; i < 4; i++) {
+        piece->position[i][0] = oldPositions[i][0] + deltaX;
+        piece->position[i][1] = oldPositions[i][1] + deltaY;
+
+        screen[piece->position[i][1]][piece->position[i][0]] = piece->type;
+        colorScreen[piece->position[i][1]][piece->position[i][0]] = piece->colorIndex;
+    }
+
+
+    copy_piece_to_screen(piece, screen, colorScreen);
 }
 
 
 
 
 
-static void draw(char screen[24][32], CharColorMap *colorMap, int mapSize) {
+static void draw(char screen[24][32],int colorScreen[24][32]) {
     clean_buffer();
+    
     for (int i = 0; i < 24; i++) {
         for (int j = 0; j < 32; j++) {
-            int colorIndex = getColorIndex(screen[i][j], colorMap, mapSize); // Get the color index for each character
-            if (colorIndex != -1) {
+            int colorIndex = colorScreen[i][j];
+            if(colorIndex > 0 && colorIndex < 6) 
                 draw_rectangle(j * 32, i * 32, 32, 32, colorIndex);
-            }
+            if(screen[i][j] == 'B') 
+                draw_rectangle(j * 32, i * 32, 32, 32, 7);
         }
     }
     
 }
 
+
+
+
 int (proj_main_loop) (int argc, char **argv) {
 
-    CharColorMap colorMap[] = {
-        {'T', 1},
-        {'I', 2},
-        {'L', 3},
-        {'B', 7},
-        {'Z', 4}      
-    };
+    
+
 
     // array of pieces
 
@@ -159,9 +201,9 @@ int (proj_main_loop) (int argc, char **argv) {
     TetrisPiece piece = generate_random_piece();
     pieces[0] = piece;
 
-    int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
 
     char screen[24][32];
+    int colorScreen[24][32];
     for (int i = 0; i < 24; i++) {
         for (int j = 0; j < 32; j++) {
             if (i == 0 || i == 23 || j == 0 || j == 31) {
@@ -171,12 +213,6 @@ int (proj_main_loop) (int argc, char **argv) {
             }
         }
     }
-
-    // Adding example Tetris pieces on the screen
-    //screen[5][10] = 'T'; screen[5][11] = 'T'; screen[5][12] = 'T'; screen[6][11] = 'T';
-    // screen[10][15] = 'I'; screen[11][15] = 'I'; screen[12][15] = 'I'; screen[13][15] = 'I';
-    // screen[20][5] = 'L'; screen[21][5] = 'L'; screen[22][5] = 'L'; screen[22][6] = 'L';
-    // screen[15][3] = 'L'; screen[16][3] = 'L'; screen[17][3] = 'L'; screen[15][4] = 'L';
 
 
         if(set_frame_buffer(0x105)) return 1;
@@ -203,12 +239,12 @@ int (proj_main_loop) (int argc, char **argv) {
                 if (msg.m_notify.interrupts & irq_set_timer) {
                     timer_int_handler();
                     if (counter % 60 == 0) {
-                        if (is_piece_at_bottom(&piece, screen)) {
+                        if (is_piece_at_bottom(&piece, screen, colorScreen)) {
                             piece = generate_random_piece();
                             pieces[countpiece] = piece;
                             countpiece++;
                         } else {
-                            move_piece(&piece, 0, 1, screen);
+                            move_piece(&piece, 0, 1, screen, colorScreen);
                         }
                        
                     }
@@ -219,15 +255,15 @@ int (proj_main_loop) (int argc, char **argv) {
                     switch (scancode)
                     {
                     case A_BREAK_CODE:
-                          move_piece(&piece, -1, 0, screen);
+                          move_piece(&piece, -1, 0, screen, colorScreen);
                         break;
                     
                     case D_BREAK_CODE:
-                       move_piece(&piece, 1, 0, screen);
+                       move_piece(&piece, 1, 0, screen, colorScreen);
                         break;
                     
                     case S_BREAK_CODE:
-                        move_piece(&piece, 0, 1, screen);
+                        move_piece(&piece, 0, 1, screen, colorScreen);
                         break;
 
                     default:
@@ -238,7 +274,7 @@ int (proj_main_loop) (int argc, char **argv) {
             default:
                 break; /* no other notifications expected: do nothing */
             }
-            draw(screen, colorMap, mapSize);
+            draw(screen, colorScreen);
         } else { 
         }
 }
