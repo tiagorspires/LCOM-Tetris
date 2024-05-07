@@ -251,6 +251,15 @@ void rotate_piece(TetrisPiece *piece, char screen[24][32], int colorScreen[24][3
     }
 }
 
+bool game_over(char screen[24][32]) {
+    for (int i = 1; i < 15; i++) {
+        if (screen[1][i] == 'P') {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 int (proj_main_loop) (int argc, char **argv) {
 
@@ -348,7 +357,24 @@ int (proj_main_loop) (int argc, char **argv) {
             default:
                 break; /* no other notifications expected: do nothing */
             }
-            draw(screen, colorScreen);
+            if(!game_over(screen)) {
+                draw(screen, colorScreen);
+            } else{
+                // actualize the screen every color to 63
+                for (int i = 0; i < 24; i++) {
+                    for (int j = 0; j < 32; j++) {
+                        screen[i][j] = '-';
+                        colorScreen[i][j] = 63;
+                        
+                    }
+                }
+                draw(screen, colorScreen);
+                if (timer_unsubscribe_int()) return 1;
+                if (keyboard_unsubscribe()) return 1;
+                if(vg_exit()) return 1;
+                return 0;
+            }
+            
         } else { 
         }
 }
