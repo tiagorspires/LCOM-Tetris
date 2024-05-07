@@ -94,11 +94,6 @@ int (draw_vline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color){
 }
 
 int (draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color){
-    if (x + width > mode_info.XResolution || y + height > mode_info.YResolution) {
-        printf("Tentativa de desenhar fora dos limites.\n");
-        return 1;  // Erro ao desenhar fora dos limites
-    }
-    
     while (height > 0){
         if(draw_hline(x, y, width, color) != 0) return 1;
         y++;
@@ -180,8 +175,6 @@ int (clean_buffer) (){
     return 0;
 }
 
-void draw_game_board(int boardX, int boardY, int boardWidth, int boardHeight) {
-    draw_rectangle(boardX, boardY, boardWidth, boardHeight, 7);
-}
+
 
 

@@ -17,3 +17,6 @@ int getColorIndex(char c, CharColorMap map[], int size) {
 }
 
 
+
+  
+

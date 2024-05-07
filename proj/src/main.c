@@ -21,139 +21,287 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-// Function to find the leftmost column that the piece occupies
-static int find_leftmost(char screen[24][32]) {
-    for (int j = 0; j < 32; j++) {
-        for (int i = 0; i < 24; i++) {
-            if (screen[i][j] == 'T') {
-                return j;
-            }
-        }
+typedef struct {
+    char type;                
+    int position[4][2];       
+    int pivot;                
+    int colorIndex;           
+    bool isActive;
+} TetrisPiece;
+
+
+TetrisPiece create_piece(char type, int startX, int startY, int colorIndex) {
+    TetrisPiece piece;
+    piece.type = type;
+    switch (type) {
+        case 'T':  
+            piece.position[0][0] = startX;     piece.position[0][1] = startY;
+            piece.position[1][0] = startX + 1; piece.position[1][1] = startY;
+            piece.position[2][0] = startX + 2; piece.position[2][1] = startY;
+            piece.position[3][0] = startX + 1; piece.position[3][1] = startY + 1;
+            piece.pivot = 1; // Central block as pivot
+            piece.colorIndex = 1;
+
+            break;
+        case 'I':  
+            piece.position[0][0] = startX; piece.position[0][1] = startY;
+            piece.position[1][0] = startX; piece.position[1][1] = startY + 1;
+            piece.position[2][0] = startX; piece.position[2][1] = startY + 2;
+            piece.position[3][0] = startX; piece.position[3][1] = startY + 3;
+            piece.pivot = 1; 
+            piece.colorIndex = 2;
+            break;
+
+        case 'L':  
+            piece.position[0][0] = startX;     piece.position[0][1] = startY;
+            piece.position[1][0] = startX;     piece.position[1][1] = startY + 1;
+            piece.position[2][0] = startX;     piece.position[2][1] = startY + 2;
+            piece.position[3][0] = startX + 1; piece.position[3][1] = startY + 2;
+            piece.pivot = 1; // Second block as pivot
+            piece.colorIndex = 3;
+            break;
+        
+        case 'Z':  
+            piece.position[0][0] = startX;     piece.position[0][1] = startY;
+            piece.position[1][0] = startX + 1; piece.position[1][1] = startY;
+            piece.position[2][0] = startX + 1; piece.position[2][1] = startY + 1;
+            piece.position[3][0] = startX + 2; piece.position[3][1] = startY + 1;
+            piece.pivot = 1; // Second block as pivot
+            piece.colorIndex = 4;
+            break;
+        
+        case 'S': // square
+            piece.position[0][0] = startX;     piece.position[0][1] = startY;
+            piece.position[1][0] = startX + 1; piece.position[1][1] = startY;
+            piece.position[2][0] = startX;     piece.position[2][1] = startY + 1;
+            piece.position[3][0] = startX + 1; piece.position[3][1] = startY + 1;
+            piece.pivot = 0;
+            piece.colorIndex = 5;
+
+            break;
     }
-    return -1; // Return -1 if the piece is not found
+    piece.isActive = true;
+    return piece;
 }
 
-// Function to find the rightmost column that the piece occupies
-static int find_rightmost(char screen[24][32]) {
-    for (int j = 31; j >= 0; j--) {
-        for (int i = 0; i < 24; i++) {
-            if (screen[i][j] == 'T') {
-                return j;
-            }
+
+// check is the piece arrived at the bottom of the screen or if there is a block below it
+bool is_piece_at_bottom(TetrisPiece *piece, char screen[24][32], int colorScreen[24][32]) {
+    for (int i = 0; i < 4; i++) {
+        if (piece->position[i][1] == 23 || screen[piece->position[i][1] + 1][piece->position[i][0]] == 'B' ||screen[piece->position[i][1] + 1][piece->position[i][0]] == 'P') {
+            for (int i = 0; i < 4; i++) {
+                colorScreen[piece->position[i][1]][piece->position[i][0]] = piece->colorIndex;
+                screen[piece->position[i][1]][piece->position[i][0]] = 'P';
+            }          
+            piece->isActive = false;
+            return true;
         }
-    }
-    return -1; // Return -1 if the piece is not found
+    }    
+    return false;
 }
 
-// Function to find the bottommost row that the piece occupies
-static int find_bottommost(char screen[24][32]) {
-    for (int i = 23; i >= 0; i--) {
-        for (int j = 0; j < 32; j++) {
-            if (screen[i][j] == 'T') {
-                return i;
-            }
-        }
-    }
-    return -1;  // Return -1 if the piece is not found
+
+// generate a piece with a random type on the top of the screen at a random position
+TetrisPiece generate_random_piece() {
+    char types[] = {'T', 'I', 'L', 'Z', 'S'};
+    char type = types[rand() % 5];
+    int startX = 5 + rand() % 5;
+    return create_piece(type, startX, 1, 1);
 }
 
-// Function to check if the piece can move to the left, right or down
-static bool can_move(char screen[24][32], CharColorMap *colorMap, int mapSize, int i, int j) {
-    if (i < 0 || i >= 24 || j < 0 || j >= 32 || screen[i][j] == 'B') return false;
+
+static void copy_piece_to_screen(TetrisPiece *piece, char screen[24][32], int colorScreen[24][32]) {
+    for (int i = 0; i < 4; i++) {
+        colorScreen[piece->position[i][1]][piece->position[i][0]] = piece->colorIndex;
+        screen[piece->position[i][1]][piece->position[i][0]] = piece->type;
+    }
+}
+
+
+void move_piece(TetrisPiece *piece, int deltaX, int deltaY, char screen[24][32], int colorScreen[24][32]) {
+    int oldPositions[4][2];
+    for (int i = 0; i < 4; i++) {
+        oldPositions[i][0] = piece->position[i][0];
+        oldPositions[i][1] = piece->position[i][1];
+
+        screen[piece->position[i][1]][piece->position[i][0]] = '-';
+        colorScreen[piece->position[i][1]][piece->position[i][0]] = 0;
+    }
+
+    bool movePossible = true;
+    for (int i = 0; i < 4; i++) {
+        int newX = oldPositions[i][0] + deltaX;
+        int newY = oldPositions[i][1] + deltaY;
+
+        if (newX < 1 || newX > 14 || newY < 1 || newY >= 24 || screen[newY][newX] != '-') {
+            movePossible = false;
+            break;
+        }
+    }
+
+    if (!movePossible) {
+        for (int i = 0; i < 4; i++) {
+            screen[oldPositions[i][1]][oldPositions[i][0]] = piece->type;
+            colorScreen[oldPositions[i][1]][oldPositions[i][0]] = piece->colorIndex;
+        }
+        return;
+    }
+
+    for (int i = 0; i < 4; i++) {
+        piece->position[i][0] = oldPositions[i][0] + deltaX;
+        piece->position[i][1] = oldPositions[i][1] + deltaY;
+
+        screen[piece->position[i][1]][piece->position[i][0]] = piece->type;
+        colorScreen[piece->position[i][1]][piece->position[i][0]] = piece->colorIndex;
+    }
+
+    copy_piece_to_screen(piece, screen, colorScreen);
+}
+
+
+// function to check if there is any to be deleted
+bool is_line_full(char screen[24][32], int line) {
+    for (int i = 1; i < 15; i++) {
+        if (screen[line][i] == '-') {
+            return false;
+        }
+    }
     return true;
 }
 
-// Function to move the piece to the left and check if it can move
-static void move_left(char screen[24][32], CharColorMap *colorMap, int mapSize) {
-    int leftmost = find_leftmost(screen);
-    for (int i = 0; i < 24; i++) {
-        if (leftmost > 0 && can_move(screen, colorMap, mapSize, i, leftmost - 1)) {
-            for (int j = 0; j < 32; j++) {
-                if (screen[i][j] == 'T') {
-                    screen[i][j] = '-';
-                    screen[i][j - 1] = 'T'; // Move to the left
+void check_and_clear_full_lines(char screen[24][32], int colorScreen[24][32], TetrisPiece pieces[], int num_pieces) {
+    for (int i = 1; i < 23; i++) {
+        if (is_line_full(screen, i)) {
+            for (int j = 1; j < 15; j++) {
+                screen[i][j] = '-';
+                colorScreen[i][j] = 0;
+            }
+            // Mover linhas para baixo
+            for (int k = i; k > 1; k--) {
+                for (int j = 1; j < 15; j++) {
+                    screen[k][j] = screen[k - 1][j];
+                    colorScreen[k][j] = colorScreen[k - 1][j];
+                }
+            }
+            // Ajustar as posições das peças
+            for (int p = 0; p < num_pieces; p++) {
+                for (int b = 0; b < 4; b++) {
+                    if (pieces[p].position[b][1] < i) {
+                        pieces[p].position[b][1]++;
+                    }
                 }
             }
         }
     }
 }
 
-// Function to move the piece to the right and check if it can move
-static void move_right(char screen[24][32], CharColorMap *colorMap, int mapSize) {
-    int rightmost = find_rightmost(screen);
-    for (int i = 0; i < 24; i++) {
-        if (rightmost < 31 && can_move(screen, colorMap, mapSize, i, rightmost + 1)) {
-            for (int j = 31; j >= 0; j--) {
-                if (screen[i][j] == 'T') {
-                    screen[i][j] = '-';
-                    screen[i][j + 1] = 'T'; // Move to the right
-                }
-            }
-        }
-    }
-}
 
-// Function to move the piece down and check if it can move
-static void move_down(char screen[24][32], CharColorMap *colorMap, int mapSize) {
-    int bottommost = find_bottommost(screen);
-    for (int j = 0; j < 32; j++) {
-        if (bottommost < 23 && can_move(screen, colorMap, mapSize, bottommost + 1, j)) {
-            for (int i = 23; i >= 0; i--) {
-                if (screen[i][j] == 'T') {
-                    screen[i][j] = '-';
-                    screen[i + 1][j] = 'T'; // Move down
-                }
-            }
-        }
-    }
-}
 
-// Function to draw the screen
-static void draw(char screen[24][32], CharColorMap *colorMap, int mapSize) {
+static void draw(char screen[24][32], int colorScreen[24][32], TetrisPiece pieces[], int num_pieces) {
     clean_buffer();
+
+    // Desenha as peças ativas no screen e colorScreen
+    for (int p = 0; p < num_pieces; p++) {
+        if (pieces[p].isActive) {
+            for (int b = 0; b < 4; b++) {
+                int px = pieces[p].position[b][0];
+                int py = pieces[p].position[b][1];
+                screen[py][px] = pieces[p].type;
+                colorScreen[py][px] = pieces[p].colorIndex;
+            }
+        }
+    }
+
+    // Desenha o tabuleiro e as peças com base nos valores de screen e colorScreen
     for (int i = 0; i < 24; i++) {
         for (int j = 0; j < 32; j++) {
-            int colorIndex = getColorIndex(screen[i][j], colorMap, mapSize); // Get the color index for each character
-            if (colorIndex != -1) {
+            int colorIndex = colorScreen[i][j];
+            if (j < 15 && colorIndex > 0 && colorIndex < 6) {
                 draw_rectangle(j * 32, i * 32, 32, 32, colorIndex);
+            }
+            if (screen[i][j] == 'B') {
+                draw_rectangle(j * 32, i * 32, 32, 32, 7);
             }
         }
     }
+}
+
+
+void rotate_piece(TetrisPiece *piece, char screen[24][32], int colorScreen[24][32]) {
+    if (piece->type == 'S') {
+        return;
+    }
+
+    int oldPositions[4][2];
+    for (int i = 0; i < 4; i++) {
+        oldPositions[i][0] = piece->position[i][0];
+        oldPositions[i][1] = piece->position[i][1];
+
+        screen[piece->position[i][1]][piece->position[i][0]] = '-';
+        colorScreen[piece->position[i][1]][piece->position[i][0]] = 0;
+    }
+
+    int pivotX = piece->position[piece->pivot][0];
+    int pivotY = piece->position[piece->pivot][1];
+
+    for (int i = 0; i < 4; i++) {
+        int newX = pivotX + pivotY - oldPositions[i][1];
+        int newY = pivotY - pivotX + oldPositions[i][0];
+
+        if (newX < 1 || newX > 14 || newY < 1 || newY >= 24 || screen[newY][newX] != '-') {
+            for (int j = 0; j < 4; j++) {
+                screen[oldPositions[j][1]][oldPositions[j][0]] = piece->type;
+                colorScreen[oldPositions[j][1]][oldPositions[j][0]] = piece->colorIndex;
+            }
+            return;
+        }
+    }
+
+    for (int i = 0; i < 4; i++) {
+        piece->position[i][0] = pivotX + pivotY - oldPositions[i][1];
+        piece->position[i][1] = pivotY - pivotX + oldPositions[i][0];
+
+        screen[piece->position[i][1]][piece->position[i][0]] = piece->type;
+        colorScreen[piece->position[i][1]][piece->position[i][0]] = piece->colorIndex;
+    }
+}
+
+bool game_over(char screen[24][32]) {
+    for (int i = 1; i < 15; i++) {
+        if (screen[1][i] == 'P') {
+            return true;
+        }
+    }
+    return false;
 }
 
 
 int (proj_main_loop) (int argc, char **argv) {
 
-    CharColorMap colorMap[] = {
-        {'T', 1},
-        {'I', 2},
-        {'L', 3},
-        {'B', 7}
-    };
-
-    int mapSize = sizeof(colorMap) / sizeof(colorMap[0]);
+    TetrisPiece pieces[100]; 
+    TetrisPiece piece = generate_random_piece();
+    pieces[0] = piece;
 
     char screen[24][32];
+    int colorScreen[24][32];
     for (int i = 0; i < 24; i++) {
-        for (int j = 0; j < 32; j++) {
-            if (i == 0 || i == 23 || j == 0 || j == 31) {
-                screen[i][j] = 'B';  // Fill the borders with 'B'
-            } else {
-                screen[i][j] = '-';
-            }
+    for (int j = 0; j < 32; j++) {
+        if (j == 0 || j >=14 || i == 0 || i == 23) { 
+            screen[i][j] = 'B';  
+            colorScreen[i][j] = 7; 
+        } else if (j < 15) {
+            screen[i][j] = '-';
+            colorScreen[i][j] = 0;
+        } else {
+            screen[i][j] = ' ';  
+            colorScreen[i][j] = 0;
         }
     }
+}
 
-    // Adding example Tetris pieces on the screen
-    screen[5][10] = 'T'; screen[5][11] = 'T'; screen[5][12] = 'T'; screen[6][11] = 'T';
-    // screen[10][15] = 'I'; screen[11][15] = 'I'; screen[12][15] = 'I'; screen[13][15] = 'I';
-    // screen[20][5] = 'L'; screen[21][5] = 'L'; screen[22][5] = 'L'; screen[22][6] = 'L';
-    // screen[15][3] = 'L'; screen[16][3] = 'L'; screen[17][3] = 'L'; screen[15][4] = 'L';
-
-
-        if(set_frame_buffer(0x105)) return 1;
-        if(set_video_mode(0x105)) return 1;
-        if(timer_set_frequency(0, 30)) return 1;
+    if(set_frame_buffer(0x105)) return 1;
+    if(set_video_mode(0x105)) return 1;
+    if(timer_set_frequency(0, 30)) return 1;
 
     int ipc_status, r;
     uint8_t irq_set_keyboard;
@@ -162,8 +310,8 @@ int (proj_main_loop) (int argc, char **argv) {
 
     if(timer_subscribe_int(&irq_set_timer)) return 1;
     if(keyboard_subscribe(&irq_set_keyboard)) return 1;
-
-    while (scancode != ESC_BREAK_CODE) { 
+    int countpiece = 1;
+    while (scancode != ESC_BREAK_CODE && countpiece < 100) { 
         if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) {
             printf("driver_receive failed with: %d", r);
             continue;
@@ -175,24 +323,37 @@ int (proj_main_loop) (int argc, char **argv) {
                 if (msg.m_notify.interrupts & irq_set_timer) {
                     timer_int_handler();
                     if (counter % 60 == 0) {
-                    move_down(screen, colorMap, mapSize);
+                        if (is_piece_at_bottom(&pieces[countpiece - 1], screen, colorScreen)) {
+                        check_and_clear_full_lines(screen, colorScreen, pieces, countpiece);
+                            if (countpiece < 50) {
+                                pieces[countpiece] = generate_random_piece();
+                                pieces[countpiece].isActive = true;
+                                countpiece++;
+                            }
+                        } else {
+                            move_piece(&pieces[countpiece - 1], 0, 1, screen, colorScreen);
+                        }
                     }
                 }
 
                 if (msg.m_notify.interrupts & irq_set_keyboard) {
                     kbc_ih_keyboard();
+                    TetrisPiece* current_piece = &pieces[countpiece - 1];
                     switch (scancode)
                     {
                     case A_BREAK_CODE:
-                        move_left(screen, colorMap, mapSize);
+                        move_piece(current_piece, -1, 0, screen, colorScreen);
                         break;
                     
                     case D_BREAK_CODE:
-                        move_right(screen, colorMap, mapSize);
+                        move_piece(current_piece, 1, 0, screen, colorScreen);
                         break;
                     
                     case S_BREAK_CODE:
-                        move_down(screen, colorMap, mapSize);
+                        move_piece(current_piece, 0, 1, screen, colorScreen);
+                        break;
+                    case W_BREAK_CODE:
+                        rotate_piece(current_piece, screen, colorScreen);
                         break;
 
                     default:
@@ -203,10 +364,25 @@ int (proj_main_loop) (int argc, char **argv) {
             default:
                 break; /* no other notifications expected: do nothing */
             }
-            draw(screen, colorMap, mapSize);
+            if(!game_over(screen)) {
+                draw(screen, colorScreen, pieces, countpiece);
+            } else{
+                // actualize the screen every color to 63
+                for (int i = 0; i < 24; i++) {
+                    for (int j = 0; j < 32; j++) {
+                        screen[i][j] = '-';
+                        colorScreen[i][j] = 63;
+                    }
+                }
+                draw(screen, colorScreen, pieces, countpiece);
+                if (timer_unsubscribe_int()) return 1;
+                if (keyboard_unsubscribe()) return 1;
+                if(vg_exit()) return 1;
+                return 0;
+            }
         } else { 
         }
-}
+    }
 
     if (timer_unsubscribe_int()) return 1;
     if (keyboard_unsubscribe()) return 1;
@@ -214,3 +390,4 @@ int (proj_main_loop) (int argc, char **argv) {
     if(vg_exit()) return 1;
     return 0;
 }
+

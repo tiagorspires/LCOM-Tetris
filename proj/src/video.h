@@ -5,8 +5,6 @@
 uint8_t* video_mem;
 vbe_mode_info_t mode_info;
 
-#define BOARD_COLOR_INDEX 7
-
 int(set_video_mode)(uint16_t submode);
 
 int get_mode_info (uint16_t mode);
@@ -33,6 +31,5 @@ int (draw_xpm)(uint16_t x, uint16_t y, xpm_map_t xpm);
 
 int (clean_buffer) ();
 
-void draw_game_board(int boardX, int boardY, int boardWidth, int boardHeight);
 
 
