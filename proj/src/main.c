@@ -366,6 +366,7 @@ int (proj_main_loop) (int argc, char **argv) {
             }
             if(!game_over(screen)) {
                 draw(screen, colorScreen, pieces, countpiece);
+                swap_buffer();
             } else{
                 // actualize the screen every color to 63
                 for (int i = 0; i < 24; i++) {
@@ -375,6 +376,7 @@ int (proj_main_loop) (int argc, char **argv) {
                     }
                 }
                 draw(screen, colorScreen, pieces, countpiece);
+                swap_buffer();
                 if (timer_unsubscribe_int()) return 1;
                 if (keyboard_unsubscribe()) return 1;
                 if(vg_exit()) return 1;

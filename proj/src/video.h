@@ -3,6 +3,7 @@
 #include "vbe.h"
 
 uint8_t* video_mem;
+uint8_t* double_buffer;
 vbe_mode_info_t mode_info;
 
 int(set_video_mode)(uint16_t submode);
@@ -30,6 +31,8 @@ uint32_t direct_mode(uint8_t red, uint8_t green, uint8_t blue);
 int (draw_xpm)(uint16_t x, uint16_t y, xpm_map_t xpm);
 
 int (clean_buffer) ();
+
+int (swap_buffer) ();
 
 
 
