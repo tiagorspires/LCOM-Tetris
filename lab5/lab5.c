@@ -17,11 +17,19 @@ int main(int argc, char *argv[]) {
 
   // enables to log function invocations that are being "wrapped" by LCF
   // [comment this out if you don't want/need it]
+<<<<<<< HEAD
   lcf_trace_calls("/Users/eamachado/MINIX-LCOM/shared/g6/lab2/trace.txt");
 
   // enables to save the output of printf function calls on a file
   // [comment this out if you don't want/need it]
   lcf_log_output("/Users/eamachado/MINIX-LCOM/shared/g6/lab2/output.txt");
+=======
+  lcf_trace_calls("/home/lcom/labs/lab5/trace.txt");
+
+  // enables to save the output of printf function calls on a file
+  // [comment this out if you don't want/need it]
+  lcf_log_output("/home/lcom/labs/lab5/output.txt");
+>>>>>>> 7712c45f7814e4fc95f87d258c5a71fa805279e8
 
   // handles control over to LCF
   // [LCF handles command line arguments and invokes the right function]
@@ -36,6 +44,7 @@ int main(int argc, char *argv[]) {
 }
 
 int(video_test_init)(uint16_t mode, uint8_t delay) {
+<<<<<<< HEAD
     if (set_video_mode(mode)) return 1;
     tickdelay(micros_to_ticks(delay*1000000));
     if(vg_exit()) return 1;
@@ -58,6 +67,32 @@ int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y, uint16_t width,
 
 int (video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
 
+=======
+    if (set_video_mode(mode)!= 0) return 1;
+    tickdelay(micros_to_ticks(delay*1000000));
+    if(vg_exit()!=0) return 1;
+  return 0;
+}
+
+int(video_test_rectangle)(uint16_t mode, uint16_t x, uint16_t y,
+                          uint16_t width, uint16_t height, uint32_t color) {
+    uint32_t new_color;
+    if (set_frame_buffer(mode)!= 0) return 1;
+    if (set_video_mode(mode)!= 0) return 1;
+    if(normalize_color(color, &new_color)!=0) return 1;
+    if(draw_rectangle(x, y, width, height, new_color)!=0) return 1;
+    if(escape_key()) return 1;
+    if(vg_exit()!=0) return 1;
+  return 0;
+
+}
+
+
+
+
+
+int (video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
+>>>>>>> 7712c45f7814e4fc95f87d258c5a71fa805279e8
     // Initialize the mode and framebuffer
     if (set_frame_buffer(mode) != 0 || set_video_mode(mode) != 0) {
         return 1;
@@ -92,6 +127,7 @@ int (video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, u
     }
 
     if(escape_key()) return 1;
+<<<<<<< HEAD
     if (vg_exit() != 0) return 1;
     return 0;
 
@@ -104,3 +140,36 @@ int (video_test_pattern)(uint16_t mode, uint8_t no_rectangles, uint32_t first, u
 }
 
 }
+=======
+
+    if (vg_exit() != 0) return 1;
+
+    return 0;
+}
+
+
+int(video_test_xpm)(xpm_map_t xpm, uint16_t x, uint16_t y) {
+  if (set_frame_buffer(0x105) != 0 || set_video_mode(0x105) != 0) return 1;
+  if (draw_xpm(x, y,xpm) != 0) return 1;
+  if(escape_key()) return 1;
+  if (vg_exit() != 0) return 1;
+  return 0;
+}
+
+int(video_test_move)(xpm_map_t xpm, uint16_t xi, uint16_t yi, uint16_t xf, uint16_t yf,
+                     int16_t speed, uint8_t fr_rate) {
+
+
+
+  return 1;
+}
+
+int(video_test_controller)() {
+  /* To be completed */
+  printf("%s(): under construction\n", __func__);
+
+  return 1;
+}
+
+
+>>>>>>> 7712c45f7814e4fc95f87d258c5a71fa805279e8

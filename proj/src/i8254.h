@@ -10,10 +10,6 @@
  */
 
 #define TIMER_FREQ 1193182 /**< @brief clock frequency for timer in PC and AT */
-<<<<<<< HEAD
-#define TIMER_MIN_FREQ 19
-=======
->>>>>>> 7712c45f7814e4fc95f87d258c5a71fa805279e8
 #define TIMER0_IRQ 0 /**< @brief Timer 0 IRQ line */
 
 /* I/O port addresses */
