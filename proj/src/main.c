@@ -8,6 +8,12 @@
 #include <lcom/timer.h>
 #include "matrix.h"
 
+typedef enum {
+    MAIN_MENU,
+    GAME,
+    GAME_OVER   
+}game_state_t;
+
 
 extern int counter;
 extern uint8_t scancode;
@@ -278,26 +284,11 @@ bool game_over(char screen[24][32]) {
 
 int (proj_main_loop) (int argc, char **argv) {
 
+    game_state_t state = MAIN_MENU;
     TetrisPiece pieces[100]; 
-    TetrisPiece piece = generate_random_piece();
-    pieces[0] = piece;
-
     char screen[24][32];
     int colorScreen[24][32];
-    for (int i = 0; i < 24; i++) {
-    for (int j = 0; j < 32; j++) {
-        if (j == 0 || j >=14 || i == 0 || i == 23) { 
-            screen[i][j] = 'B';  
-            colorScreen[i][j] = 7; 
-        } else if (j < 15) {
-            screen[i][j] = '-';
-            colorScreen[i][j] = 0;
-        } else {
-            screen[i][j] = ' ';  
-            colorScreen[i][j] = 0;
-        }
-    }
-}
+    
 
     if(set_frame_buffer(0x105)) return 1;
     if(set_video_mode(0x105)) return 1;
@@ -321,53 +312,83 @@ int (proj_main_loop) (int argc, char **argv) {
             case HARDWARE: /* hardware interrupt notification */
 
                 if (msg.m_notify.interrupts & irq_set_timer) {
-                    timer_int_handler();
-                    if (counter % 60 == 0) {
-                        if (is_piece_at_bottom(&pieces[countpiece - 1], screen, colorScreen)) {
-                        check_and_clear_full_lines(screen, colorScreen, pieces, countpiece);
-                            if (countpiece < 50) {
-                                pieces[countpiece] = generate_random_piece();
-                                pieces[countpiece].isActive = true;
-                                countpiece++;
+                    if(state == GAME){
+                        timer_int_handler();
+                        if (counter % 60 == 0) {
+                                if (is_piece_at_bottom(&pieces[countpiece - 1], screen, colorScreen)) {
+                                check_and_clear_full_lines(screen, colorScreen, pieces, countpiece);
+                                    if (countpiece < 50) {
+                                        pieces[countpiece] = generate_random_piece();
+                                        pieces[countpiece].isActive = true;
+                                        countpiece++;
+                                    }
+                                } else {
+                                    move_piece(&pieces[countpiece - 1], 0, 1, screen, colorScreen);
+                                }
                             }
-                        } else {
-                            move_piece(&pieces[countpiece - 1], 0, 1, screen, colorScreen);
                         }
-                    }
                 }
 
                 if (msg.m_notify.interrupts & irq_set_keyboard) {
                     kbc_ih_keyboard();
                     TetrisPiece* current_piece = &pieces[countpiece - 1];
-                    switch (scancode)
-                    {
-                    case A_BREAK_CODE:
-                        move_piece(current_piece, -1, 0, screen, colorScreen);
-                        break;
-                    
-                    case D_BREAK_CODE:
-                        move_piece(current_piece, 1, 0, screen, colorScreen);
-                        break;
-                    
-                    case S_BREAK_CODE:
-                        move_piece(current_piece, 0, 1, screen, colorScreen);
-                        break;
-                    case W_BREAK_CODE:
-                        rotate_piece(current_piece, screen, colorScreen);
-                        break;
+                    if(state == GAME){
+                        if (!game_over(screen)){
+                            switch (scancode)
+                            {
+                            case A_BREAK_CODE:
+                                move_piece(current_piece, -1, 0, screen, colorScreen);
+                                break;
+                            
+                            case D_BREAK_CODE:
+                                move_piece(current_piece, 1, 0, screen, colorScreen);
+                                break;
+                            
+                            case S_BREAK_CODE:
+                                move_piece(current_piece, 0, 1, screen, colorScreen);
+                                break;
+                            case W_BREAK_CODE:
+                                rotate_piece(current_piece, screen, colorScreen);
+                                break;
 
-                    default:
-                        break;
+                            default:
+                                break;
+                            }
+                        } else {
+                            state = GAME_OVER;
+                        }
+                    }
+                    if(state == MAIN_MENU && scancode == E_BREAK_CODE){
+                        
+                        TetrisPiece piece = generate_random_piece();
+                        pieces[0] = piece;
+                            for (int i = 0; i < 24; i++) {
+                                for (int j = 0; j < 32; j++) {
+                                    if (j == 0 || j >=14 || i == 0 || i == 23) { 
+                                        screen[i][j] = 'B';  
+                                        colorScreen[i][j] = 7; 
+                                    } else if (j < 15) {
+                                        screen[i][j] = '-';
+                                        colorScreen[i][j] = 0;
+                                    } else {
+                                        screen[i][j] = ' ';  
+                                        colorScreen[i][j] = 0;
+                                    }
+                                }
+                            }
+                        state = GAME;
+                    }
+
+                    if (state == GAME && scancode == Q_BREAK_CODE) {
+                        state = GAME_OVER;
                     }
                 }
                 break;
             default:
                 break; /* no other notifications expected: do nothing */
             }
-            if(!game_over(screen)) {
-                draw(screen, colorScreen, pieces, countpiece);
-                swap_buffer();
-            } else{
+            if(state == GAME_OVER){ 
+                
                 // actualize the screen every color to 63
                 for (int i = 0; i < 24; i++) {
                     for (int j = 0; j < 32; j++) {
@@ -381,6 +402,10 @@ int (proj_main_loop) (int argc, char **argv) {
                 if (keyboard_unsubscribe()) return 1;
                 if(vg_exit()) return 1;
                 return 0;
+                
+            } else {
+                draw(screen, colorScreen, pieces, countpiece);
+                swap_buffer();
             }
         } else { 
         }
