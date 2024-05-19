@@ -8,6 +8,7 @@
 #include <lcom/timer.h>
 #include "matrix.h"
 #include "pictures.h"
+#include "mouse.h"
 
 typedef enum {
     MAIN_MENU,
