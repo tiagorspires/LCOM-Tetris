@@ -48,6 +48,10 @@ int set_frame_buffer(uint16_t mode){
 
     if(video_mem == NULL) return 1;
 
+    double_buffer = malloc(frame_buffer_size);
+
+    if(double_buffer == NULL) return 1;
+
 return 0;
 }
 
@@ -62,7 +66,7 @@ int (set_pixel_color) (uint16_t x, uint16_t y, uint32_t color){
     unsigned int start_index = (y * mode_info.XResolution + x) * bytes_per_pixel();
 
     // copiar a cor para o pixel
-    if(memcpy(&video_mem[start_index], &color, bytes_per_pixel()) == NULL) return 1;
+    if(memcpy(&double_buffer[start_index], &color, bytes_per_pixel()) == NULL) return 1;
 
     
     return 0;
@@ -171,10 +175,14 @@ return 0;
 }
 
 int (clean_buffer) (){
-    memset(video_mem, 0, get_frame_buffer_size());
+    memset(double_buffer, 0, get_frame_buffer_size());
     return 0;
 }
 
+int (swap_buffer) (){
+    memcpy(video_mem, double_buffer, get_frame_buffer_size());
+    return 0;
+}
 
 
 
