@@ -413,7 +413,38 @@ int (proj_main_loop) (int argc, char **argv) {
                             }
                             state = GAME;
                         } else if(x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) + 30 && y <= (max_y / 2) + 130){
-                            state = GAME_OVER;
+                            if (timer_unsubscribe_int()) return 1;
+                            if (keyboard_unsubscribe()) return 1;
+                            if (mouse_unsubscribe_int(&irq_set_mouse)) return 1;
+                            if (vg_exit()) return 1;
+                            return 0;
+                        }
+                    
+                    } else if(state == GAME_OVER && pp.lb == 1){
+                        if(x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) - 130 && y <= (max_y / 2) - 30){
+                            TetrisPiece piece = generate_random_piece();
+                            pieces[0] = piece;
+                            for (int i = 0; i < 24; i++) {
+                                for (int j = 0; j < 32; j++) {
+                                    if (j == 0 || j >=14 || i == 0 || i == 23) { 
+                                        screen[i][j] = 'B';  
+                                        colorScreen[i][j] = 7; 
+                                    } else if (j < 15) {
+                                        screen[i][j] = '-';
+                                        colorScreen[i][j] = 0;
+                                    } else {
+                                        screen[i][j] = ' ';  
+                                        colorScreen[i][j] = 0;
+                                    }
+                                }
+                            }
+                            state = GAME;
+                        } else if(x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) + 30 && y <= (max_y / 2) + 130){
+                            if (timer_unsubscribe_int()) return 1;
+                            if (keyboard_unsubscribe()) return 1;
+                            if (mouse_unsubscribe_int(&irq_set_mouse)) return 1;
+                            if (vg_exit()) return 1;
+                            return 0;
                         }
                     }
 
@@ -447,19 +478,27 @@ int (proj_main_loop) (int argc, char **argv) {
 
                 swap_buffer();
             } else if(state == GAME_OVER){ 
-                for (int i = 0; i < 24; i++) {
-                    for (int j = 0; j < 32; j++) {
-                        screen[i][j] = '-';
-                        colorScreen[i][j] = 63;
-                    }
+                clean_buffer();
+                draw_xpm(x, y, mouse_cursor);
+                if (draw_centered_rectangles(max_x, max_y) != 0) {
+                    printf("Failed to draw rectangles.\n");
+                    return 1;
                 }
-                draw(screen, colorScreen, pieces, countpiece);
+
+                xpm_row_t const *restart_word[] = {R, E, S, T, A, R, T};
+                xpm_row_t const *exit_word[] = {E, X, I, T};
+
+                
+                int top_rect_x = (max_x / 2) - 150;
+                int top_rect_y = (max_y / 2) - 130;
+                
+                int bottom_rect_x = (max_x / 2) - 150;
+                int bottom_rect_y = (max_y / 2) + 30;
+
+                draw_word_in_rectangle(top_rect_x, top_rect_y, restart_word, 7);
+                draw_word_in_rectangle(bottom_rect_x, bottom_rect_y, exit_word, 4);
+
                 swap_buffer();
-                if (timer_unsubscribe_int()) return 1;
-                if (keyboard_unsubscribe()) return 1;
-                if(mouse_subscribe_int(&irq_set_mouse)) return 1;
-                if(vg_exit()) return 1;
-                return 0;
             } else {
                 draw(screen, colorScreen, pieces, countpiece);
                 swap_buffer();

@@ -42,7 +42,6 @@
  * 
  */
 
-
   static xpm_row_t const P[] = {
   "7 9 2",
   "  0",
@@ -163,6 +162,36 @@ static xpm_row_t const T[] = {
   "       "
 };
 
+static xpm_row_t const R[] = {
+  "7 9 2",
+  "  0",
+  "1 1",
+  "111111 ",
+  "1111111",
+  "11   11",
+  "1111111",
+  "11111  ",
+  "11  11 ",
+  "11   11",
+  "11    1",
+  "       "
+};
+
+static xpm_row_t const S[] = {
+  "7 9 2",
+  "  0",
+  "1 1",
+  " 11111 ",
+  "1111111",
+  "11     ",
+  " 11111 ",
+  "     11",
+  "11    1",
+  "1111111",
+  " 11111 ",
+  "       "
+};
+
 
 static xpm_row_t const mouse_cursor[] = {
   "30 43 3",
@@ -213,3 +242,4 @@ static xpm_row_t const mouse_cursor[] = {
   "           XXXXXX             ",
   "                              ",
 };
+
