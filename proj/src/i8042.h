@@ -29,6 +29,7 @@
 #define Q_BREAK_CODE 0x90
 #define W_BREAK_CODE 0x91
 #define E_BREAK_CODE 0x92
+#define SPACE_BREAK_CODE 0xB9
 
 
 #define LEFT_BUTTON     BIT(0)
@@ -43,6 +44,11 @@
 #define SIGN_EXTENSION      0xFF00
 #define BYTE_TO_MOUSE       0xD4
 #define DIS_DATA_REPORTING  0xF5
+
+#define ACK 0xFA
+#define NACK 0xFE
+#define ERROR_REP 0xFC
+
 
 #define TWO_BYTES 0XE0
 
