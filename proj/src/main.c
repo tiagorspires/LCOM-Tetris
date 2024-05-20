@@ -2,7 +2,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-
 #include "video.h"
 #include "keyboard.h"
 #include <lcom/timer.h>
@@ -20,12 +19,14 @@ extern int counter;
 extern uint8_t scancode;
 int screen_width = 1024;  
 int screen_height = 768;  
+extern struct packet pp;
+extern int x, y;
 
 int main(int argc, char *argv[]) {
     lcf_set_language("EN-US");
     if (lcf_start(argc, argv)) return 1;
     lcf_cleanup();
-    return 0;
+    return 0; 
 }
 
 typedef struct {
@@ -311,17 +312,19 @@ int (proj_main_loop) (int argc, char **argv) {
     int ipc_status, r;
     uint8_t irq_set_keyboard;
     uint8_t irq_set_timer;
-    //uint8_t irq_set_mouse;
+    uint8_t irq_set_mouse;
     
     
     message msg;
 
     // set stream mode and data reporting
- //   if(change_data_report_mode(0xF4)) return 1;
+    if(change_data_report_mode(0xF4)) return 1;
+    if(change_data_report_mode(0xEA)) return 1;
+
 
     if(timer_subscribe_int(&irq_set_timer)) return 1;
     if(keyboard_subscribe(&irq_set_keyboard)) return 1;
-    //if(mouse_subscribe_int(&irq_set_mouse)) return 1;
+    if(mouse_subscribe_int(&irq_set_mouse)) return 1;
 
     int countpiece = 1;
     while (scancode != ESC_BREAK_CODE && countpiece < 100) { 
@@ -407,12 +410,20 @@ int (proj_main_loop) (int argc, char **argv) {
                         state = GAME_OVER;
                     }
                 }
+                if (msg.m_notify.interrupts & irq_set_mouse) {
+                    mouse_ih();
+                    mouse_event_handler(&pp);
+
+
+                }
                 break;
             default:
                 break; /* no other notifications expected: do nothing */
             }
             if(state == MAIN_MENU){
                 clean_buffer();
+                // draw the mouse cursor according to his pp position
+                draw_xpm(x, y, mouse_cursor);
                 if (draw_centered_rectangles(screen_width, screen_height) != 0) {
                     printf("Failed to draw rectangles.\n");
                     return 1;  // Handle failure case
@@ -444,7 +455,7 @@ int (proj_main_loop) (int argc, char **argv) {
                 swap_buffer();
                 if (timer_unsubscribe_int()) return 1;
                 if (keyboard_unsubscribe()) return 1;
-          //      if(mouse_subscribe_int(&irq_set_mouse)) return 1;
+                if(mouse_subscribe_int(&irq_set_mouse)) return 1;
                 if(vg_exit()) return 1;
                 return 0;
             } else {
@@ -458,7 +469,7 @@ int (proj_main_loop) (int argc, char **argv) {
     if (timer_unsubscribe_int()) return 1;
     if (keyboard_unsubscribe()) return 1;
    // if(mouse_subscribe_int(&irq_set_mouse)) return 1;
-   // if(change_data_report_mode(0xF5)) return 1;  
+    if(change_data_report_mode(0xF5)) return 1;  
     if(escape_key()) return 1;
     if(vg_exit()) return 1;
     return 0;

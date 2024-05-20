@@ -2,12 +2,14 @@
 #include <lcom/lcf.h>
 #include "mouse.h"
 
+
 int mouse_hook_id=2;
 uint32_t count=0;
 struct packet pp;
 int i=0;
 bool valid_packet=true;
 bool update_count=false;
+int x = 10, y = 10;
 
 
 int (mouse_subscribe_int)(uint8_t* bit_no){
@@ -69,7 +71,6 @@ void (mouse_ih)(){
             pp.delta_x = delta_x;
             pp.delta_y = delta_y;
 
-            mouse_print_packet(&pp);
             update_count=true;
             i=-1;
           }
@@ -142,4 +143,10 @@ int change_data_report_mode(uint8_t set) {
     return error ? 1 : 0;
 }
 
+void mouse_event_handler(struct packet *pp){
+  if(pp->lb){
+    x+=pp->delta_x;
+    y-=pp->delta_y;
+  }
+}
 
