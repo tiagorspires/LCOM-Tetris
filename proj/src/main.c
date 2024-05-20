@@ -385,26 +385,6 @@ int (proj_main_loop) (int argc, char **argv) {
                         }
                     }
                     
-                    if(state == MAIN_MENU && scancode == E_BREAK_CODE){
-                        
-                        TetrisPiece piece = generate_random_piece();
-                        pieces[0] = piece;
-                            for (int i = 0; i < 24; i++) {
-                                for (int j = 0; j < 32; j++) {
-                                    if (j == 0 || j >=14 || i == 0 || i == 23) { 
-                                        screen[i][j] = 'B';  
-                                        colorScreen[i][j] = 7; 
-                                    } else if (j < 15) {
-                                        screen[i][j] = '-';
-                                        colorScreen[i][j] = 0;
-                                    } else {
-                                        screen[i][j] = ' ';  
-                                        colorScreen[i][j] = 0;
-                                    }
-                                }
-                            }
-                        state = GAME;
-                    }
 
                     if (state == GAME && scancode == Q_BREAK_CODE) {
                         state = GAME_OVER;
