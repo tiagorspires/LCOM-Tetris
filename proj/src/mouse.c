@@ -155,8 +155,3 @@ void mouse_event_handler(struct packet *pp){
   else if (y > max_y - 1) y = max_y - 1;
 }
 
-
-
-
-
-
