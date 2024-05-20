@@ -10,6 +10,7 @@ int i=0;
 bool valid_packet=true;
 bool update_count=false;
 int x = 10, y = 10;
+int max_x = 1024, max_y = 768;
 
 
 int (mouse_subscribe_int)(uint8_t* bit_no){
@@ -144,9 +145,18 @@ int change_data_report_mode(uint8_t set) {
 }
 
 void mouse_event_handler(struct packet *pp){
-  if(pp->lb){
-    x+=pp->delta_x;
-    y-=pp->delta_y;
-  }
+  x += pp->delta_x;
+  y -= pp->delta_y;
+
+  if (x < 0) x = 0;
+  else if (x > max_x - 1) x = max_x - 1;
+
+  if (y < 0) y = 0;
+  else if (y > max_y - 1) y = max_y - 1;
 }
+
+
+
+
+
 

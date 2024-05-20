@@ -17,8 +17,7 @@ typedef enum {
 
 extern int counter;
 extern uint8_t scancode;
-int screen_width = 1024;  
-int screen_height = 768;  
+extern int max_x, max_y; 
 extern struct packet pp;
 extern int x, y;
 
@@ -246,18 +245,18 @@ bool game_over(char screen[24][32]) {
     return false;
 }
 
-int draw_centered_rectangles(int screen_width, int screen_height) {
+int draw_centered_rectangles(int max_x, int max_y) {
     int rect_width = 300;
     int rect_height = 100;
     int gap = 30; // Gap between the two rectangles
 
     // Calculate coordinates for the top rectangle
-    int top_rect_x = (screen_width / 2) - (rect_width / 2);
-    int top_rect_y = (screen_height / 2) - rect_height - (gap / 2);
+    int top_rect_x = (max_x / 2) - (rect_width / 2);
+    int top_rect_y = (max_y / 2) - rect_height - (gap / 2);
 
     // Calculate coordinates for the bottom rectangle
-    int bottom_rect_x = (screen_width / 2) - (rect_width / 2);
-    int bottom_rect_y = (screen_height / 2) + (gap / 2);
+    int bottom_rect_x = (max_x / 2) - (rect_width / 2);
+    int bottom_rect_y = (max_y / 2) + (gap / 2);
 
     // Draw top rectangle
     if (draw_hline(top_rect_x, top_rect_y, rect_width, 1) != 0) return 1;
@@ -385,6 +384,7 @@ int (proj_main_loop) (int argc, char **argv) {
                             state = GAME_OVER;
                         }
                     }
+                    
                     if(state == MAIN_MENU && scancode == E_BREAK_CODE){
                         
                         TetrisPiece piece = generate_random_piece();
@@ -413,7 +413,29 @@ int (proj_main_loop) (int argc, char **argv) {
                 if (msg.m_notify.interrupts & irq_set_mouse) {
                     mouse_ih();
                     mouse_event_handler(&pp);
-
+                    if(state == MAIN_MENU && pp.lb == 1){
+                        if(x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) - 130 && y <= (max_y / 2) - 30){
+                            TetrisPiece piece = generate_random_piece();
+                            pieces[0] = piece;
+                            for (int i = 0; i < 24; i++) {
+                                for (int j = 0; j < 32; j++) {
+                                    if (j == 0 || j >=14 || i == 0 || i == 23) { 
+                                        screen[i][j] = 'B';  
+                                        colorScreen[i][j] = 7; 
+                                    } else if (j < 15) {
+                                        screen[i][j] = '-';
+                                        colorScreen[i][j] = 0;
+                                    } else {
+                                        screen[i][j] = ' ';  
+                                        colorScreen[i][j] = 0;
+                                    }
+                                }
+                            }
+                            state = GAME;
+                        } else if(x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) + 30 && y <= (max_y / 2) + 130){
+                            state = GAME_OVER;
+                        }
+                    }
 
                 }
                 break;
@@ -424,7 +446,7 @@ int (proj_main_loop) (int argc, char **argv) {
                 clean_buffer();
                 // draw the mouse cursor according to his pp position
                 draw_xpm(x, y, mouse_cursor);
-                if (draw_centered_rectangles(screen_width, screen_height) != 0) {
+                if (draw_centered_rectangles(max_x, max_y) != 0) {
                     printf("Failed to draw rectangles.\n");
                     return 1;  // Handle failure case
                 }
@@ -434,11 +456,11 @@ int (proj_main_loop) (int argc, char **argv) {
                 xpm_row_t const *exit_word[] = {E, X, I, T};
 
                 // Calculate coordinates for the top rectangle
-                int top_rect_x = (screen_width / 2) - 150;
-                int top_rect_y = (screen_height / 2) - 130;
+                int top_rect_x = (max_x / 2) - 150;
+                int top_rect_y = (max_y / 2) - 130;
                 // Calculate coordinates for the bottom rectangle
-                int bottom_rect_x = (screen_width / 2) - 150;
-                int bottom_rect_y = (screen_height / 2) + 30;
+                int bottom_rect_x = (max_x / 2) - 150;
+                int bottom_rect_y = (max_y / 2) + 30;
 
                 draw_word_in_rectangle(top_rect_x, top_rect_y, play_word, 4);
                 draw_word_in_rectangle(bottom_rect_x, bottom_rect_y, exit_word, 4);
@@ -468,7 +490,7 @@ int (proj_main_loop) (int argc, char **argv) {
 
     if (timer_unsubscribe_int()) return 1;
     if (keyboard_unsubscribe()) return 1;
-   // if(mouse_subscribe_int(&irq_set_mouse)) return 1;
+    if(mouse_unsubscribe_int(&irq_set_mouse)) return 1;
     if(change_data_report_mode(0xF5)) return 1;  
     if(escape_key()) return 1;
     if(vg_exit()) return 1;
