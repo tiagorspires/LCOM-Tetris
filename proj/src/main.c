@@ -295,8 +295,6 @@ void drop_until_bottom(TetrisPiece *piece, char screen[24][32], int colorScreen[
     }
 }
 
-
-
 int (proj_main_loop) (int argc, char **argv) {
 
     game_state_t state = MAIN_MENU;
@@ -320,7 +318,6 @@ int (proj_main_loop) (int argc, char **argv) {
     if(change_data_report_mode(0xF4)) return 1;
     if(change_data_report_mode(0xEA)) return 1;
 
-
     if(timer_subscribe_int(&irq_set_timer)) return 1;
     if(keyboard_subscribe(&irq_set_keyboard)) return 1;
     if(mouse_subscribe_int(&irq_set_mouse)) return 1;
@@ -339,18 +336,18 @@ int (proj_main_loop) (int argc, char **argv) {
                     if(state == GAME){
                         timer_int_handler();
                         if (counter % 60 == 0) {
-                                if (is_piece_at_bottom(&pieces[countpiece - 1], screen, colorScreen)) {
+                            if (is_piece_at_bottom(&pieces[countpiece - 1], screen, colorScreen)) {
                                 check_and_clear_full_lines(screen, colorScreen, pieces, countpiece);
-                                    if (countpiece < 50) {
-                                        pieces[countpiece] = generate_random_piece();
-                                        pieces[countpiece].isActive = true;
-                                        countpiece++;
-                                    }
-                                } else {
-                                    move_piece(&pieces[countpiece - 1], 0, 1, screen, colorScreen);
+                                if (countpiece < 50) {
+                                    pieces[countpiece] = generate_random_piece();
+                                    pieces[countpiece].isActive = true;
+                                    countpiece++;
                                 }
+                            } else {
+                                move_piece(&pieces[countpiece - 1], 0, 1, screen, colorScreen);
                             }
                         }
+                    }
                 }
 
                 if (msg.m_notify.interrupts & irq_set_keyboard) {
@@ -358,34 +355,29 @@ int (proj_main_loop) (int argc, char **argv) {
                     TetrisPiece* current_piece = &pieces[countpiece - 1];
                     if(state == GAME){
                         if (!game_over(screen)){
-                            switch (scancode)
-                            {
-                            case A_BREAK_CODE:
-                                move_piece(current_piece, -1, 0, screen, colorScreen);
-                                break;
-                            
-                            case D_BREAK_CODE:
-                                move_piece(current_piece, 1, 0, screen, colorScreen);
-                                break;
-                            
-                            case S_BREAK_CODE:
-                                move_piece(current_piece, 0, 1, screen, colorScreen);
-                                break;
-                            case W_BREAK_CODE:
-                                rotate_piece(current_piece, screen, colorScreen);
-                                break;
-                            case SPACE_BREAK_CODE:
-                                drop_until_bottom(current_piece, screen, colorScreen);
-                                break;
-                            default:
-                                break;
+                            switch (scancode) {
+                                case A_BREAK_CODE:
+                                    move_piece(current_piece, -1, 0, screen, colorScreen);
+                                    break;
+                                case D_BREAK_CODE:
+                                    move_piece(current_piece, 1, 0, screen, colorScreen);
+                                    break;
+                                case S_BREAK_CODE:
+                                    move_piece(current_piece, 0, 1, screen, colorScreen);
+                                    break;
+                                case W_BREAK_CODE:
+                                    rotate_piece(current_piece, screen, colorScreen);
+                                    break;
+                                case SPACE_BREAK_CODE:
+                                    drop_until_bottom(current_piece, screen, colorScreen);
+                                    break;
+                                default:
+                                    break;
                             }
                         } else {
                             state = GAME_OVER;
                         }
                     }
-                    
-
                     if (state == GAME && scancode == Q_BREAK_CODE) {
                         state = GAME_OVER;
                     }
@@ -393,13 +385,13 @@ int (proj_main_loop) (int argc, char **argv) {
                 if (msg.m_notify.interrupts & irq_set_mouse) {
                     mouse_ih();
                     mouse_event_handler(&pp);
-                    if(state == MAIN_MENU && pp.lb == 1){
-                        if(x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) - 130 && y <= (max_y / 2) - 30){
+                    if (state == MAIN_MENU && pp.lb == 1) {
+                        if (x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) - 130 && y <= (max_y / 2) - 30) {
                             TetrisPiece piece = generate_random_piece();
                             pieces[0] = piece;
                             for (int i = 0; i < 24; i++) {
                                 for (int j = 0; j < 32; j++) {
-                                    if (j == 0 || j >=14 || i == 0 || i == 23) { 
+                                    if (j == 0 || j >= 14 || i == 0 || i == 23) { 
                                         screen[i][j] = 'B';  
                                         colorScreen[i][j] = 7; 
                                     } else if (j < 15) {
@@ -411,22 +403,23 @@ int (proj_main_loop) (int argc, char **argv) {
                                     }
                                 }
                             }
+                            countpiece = 1; // Resetar o contador de peças
                             state = GAME;
-                        } else if(x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) + 30 && y <= (max_y / 2) + 130){
+                        } else if (x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) + 30 && y <= (max_y / 2) + 130) {
                             if (timer_unsubscribe_int()) return 1;
                             if (keyboard_unsubscribe()) return 1;
                             if (mouse_unsubscribe_int(&irq_set_mouse)) return 1;
                             if (vg_exit()) return 1;
                             return 0;
                         }
-                    
-                    } else if(state == GAME_OVER && pp.lb == 1){
-                        if(x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) - 130 && y <= (max_y / 2) - 30){
+                    } else if (state == GAME_OVER && pp.lb == 1) {
+                        if (x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) - 130 && y <= (max_y / 2) - 30) {
+                            // Reinicializar o estado do jogo
                             TetrisPiece piece = generate_random_piece();
                             pieces[0] = piece;
                             for (int i = 0; i < 24; i++) {
                                 for (int j = 0; j < 32; j++) {
-                                    if (j == 0 || j >=14 || i == 0 || i == 23) { 
+                                    if (j == 0 || j >= 14 || i == 0 || i == 23) { 
                                         screen[i][j] = 'B';  
                                         colorScreen[i][j] = 7; 
                                     } else if (j < 15) {
@@ -438,8 +431,9 @@ int (proj_main_loop) (int argc, char **argv) {
                                     }
                                 }
                             }
+                            countpiece = 1; // Resetar o contador de peças
                             state = GAME;
-                        } else if(x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) + 30 && y <= (max_y / 2) + 130){
+                        } else if (x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) + 30 && y <= (max_y / 2) + 130) {
                             if (timer_unsubscribe_int()) return 1;
                             if (keyboard_unsubscribe()) return 1;
                             if (mouse_unsubscribe_int(&irq_set_mouse)) return 1;
@@ -447,13 +441,12 @@ int (proj_main_loop) (int argc, char **argv) {
                             return 0;
                         }
                     }
-
                 }
                 break;
             default:
                 break; /* no other notifications expected: do nothing */
             }
-            if(state == MAIN_MENU){
+            if (state == MAIN_MENU) {
                 clean_buffer();
                 // draw the mouse cursor according to his pp position
                 draw_xpm(x, y, mouse_cursor);
@@ -461,7 +454,7 @@ int (proj_main_loop) (int argc, char **argv) {
                     printf("Failed to draw rectangles.\n");
                     return 1;  // Handle failure case
                 }
-                
+
                 // Draw the words "PLAY" and "EXIT" in the rectangles
                 xpm_row_t const *play_word[] = {P, L, A, Y};
                 xpm_row_t const *exit_word[] = {E, X, I, T};
@@ -477,7 +470,7 @@ int (proj_main_loop) (int argc, char **argv) {
                 draw_word_in_rectangle(bottom_rect_x, bottom_rect_y, exit_word, 4);
 
                 swap_buffer();
-            } else if(state == GAME_OVER){ 
+            } else if (state == GAME_OVER) { 
                 clean_buffer();
                 draw_xpm(x, y, mouse_cursor);
                 if (draw_centered_rectangles(max_x, max_y) != 0) {
@@ -488,10 +481,9 @@ int (proj_main_loop) (int argc, char **argv) {
                 xpm_row_t const *restart_word[] = {R, E, S, T, A, R, T};
                 xpm_row_t const *exit_word[] = {E, X, I, T};
 
-                
                 int top_rect_x = (max_x / 2) - 150;
                 int top_rect_y = (max_y / 2) - 130;
-                
+
                 int bottom_rect_x = (max_x / 2) - 150;
                 int bottom_rect_y = (max_y / 2) + 30;
 
@@ -509,9 +501,11 @@ int (proj_main_loop) (int argc, char **argv) {
 
     if (timer_unsubscribe_int()) return 1;
     if (keyboard_unsubscribe()) return 1;
-    if(mouse_unsubscribe_int(&irq_set_mouse)) return 1;
-    if(change_data_report_mode(0xF5)) return 1;  
-    if(escape_key()) return 1;
-    if(vg_exit()) return 1;
+    if (mouse_unsubscribe_int(&irq_set_mouse)) return 1;
+    if (change_data_report_mode(0xF5)) return 1;  
+    if (escape_key()) return 1;
+    if (vg_exit()) return 1;
     return 0;
 }
+
+
