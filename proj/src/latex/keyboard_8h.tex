@@ -1,0 +1,74 @@
+\doxysection{keyboard.\+h File Reference}
+\hypertarget{keyboard_8h}{}\label{keyboard_8h}\index{keyboard.h@{keyboard.h}}
+
+
+Keyboard interface functions and definitions.  
+
+
+{\ttfamily \#include $<$lcom/lcf.\+h$>$}\newline
+{\ttfamily \#include "{}i8042.\+h"{}}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{keyboard_8h_acf4fe6cea09b4953e286c1df9a61f2c8}{keyboard\+\_\+subscribe}} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}bit\+\_\+no)
+\begin{DoxyCompactList}\small\item\em Subscribes to keyboard interrupts. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{keyboard_8h_ac5a55c875cfe613e7fc3dec67ab0dde8}{keyboard\+\_\+unsubscribe}} ()
+\begin{DoxyCompactList}\small\item\em Unsubscribes from keyboard interrupts. \end{DoxyCompactList}\item 
+\Hypertarget{keyboard_8h_a2cd9ca9676c3bb32caf630687a1297af}\label{keyboard_8h_a2cd9ca9676c3bb32caf630687a1297af} 
+void {\bfseries kbc\+\_\+ih\+\_\+keyboard} ()
+\begin{DoxyCompactList}\small\item\em Keyboard interrupt handler. Reads the scancode from the output buffer. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{keyboard_8h_a49f6ac629f8958eaf0606490ecaf2553}{escape\+\_\+key}} ()
+\begin{DoxyCompactList}\small\item\em Waits for the ESC key to be pressed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Keyboard interface functions and definitions. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{keyboard_8h_a49f6ac629f8958eaf0606490ecaf2553}\index{keyboard.h@{keyboard.h}!escape\_key@{escape\_key}}
+\index{escape\_key@{escape\_key}!keyboard.h@{keyboard.h}}
+\doxysubsubsection{\texorpdfstring{escape\_key()}{escape\_key()}}
+{\footnotesize\ttfamily \label{keyboard_8h_a49f6ac629f8958eaf0606490ecaf2553} 
+int escape\+\_\+key (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Waits for the ESC key to be pressed. 
+
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{keyboard_8h_acf4fe6cea09b4953e286c1df9a61f2c8}\index{keyboard.h@{keyboard.h}!keyboard\_subscribe@{keyboard\_subscribe}}
+\index{keyboard\_subscribe@{keyboard\_subscribe}!keyboard.h@{keyboard.h}}
+\doxysubsubsection{\texorpdfstring{keyboard\_subscribe()}{keyboard\_subscribe()}}
+{\footnotesize\ttfamily \label{keyboard_8h_acf4fe6cea09b4953e286c1df9a61f2c8} 
+int keyboard\+\_\+subscribe (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{bit\+\_\+no}{}\end{DoxyParamCaption})}
+
+
+
+Subscribes to keyboard interrupts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bit\+\_\+no} & Address of memory to be initialized with the bit number to be set in the mask returned upon an interrupt. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{keyboard_8h_ac5a55c875cfe613e7fc3dec67ab0dde8}\index{keyboard.h@{keyboard.h}!keyboard\_unsubscribe@{keyboard\_unsubscribe}}
+\index{keyboard\_unsubscribe@{keyboard\_unsubscribe}!keyboard.h@{keyboard.h}}
+\doxysubsubsection{\texorpdfstring{keyboard\_unsubscribe()}{keyboard\_unsubscribe()}}
+{\footnotesize\ttfamily \label{keyboard_8h_ac5a55c875cfe613e7fc3dec67ab0dde8} 
+int keyboard\+\_\+unsubscribe (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Unsubscribes from keyboard interrupts. 
+
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}

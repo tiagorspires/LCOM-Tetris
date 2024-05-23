@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "timer.h": "c"
+        "timer.h": "c",
+        "matrix.h": "c",
+        "lcf.h": "c"
     }
 }

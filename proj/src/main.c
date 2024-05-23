@@ -5,8 +5,7 @@
 #include "video.h"
 #include "keyboard.h"
 #include <lcom/timer.h>
-#include "matrix.h"
-#include "pictures.h"
+ #include "pictures.h"
 #include "mouse.h"
 #include "game.h"
 

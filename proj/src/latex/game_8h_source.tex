@@ -1,0 +1,57 @@
+\doxysection{game.\+h}
+\hypertarget{game_8h_source}{}\label{game_8h_source}\mbox{\hyperlink{game_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ GAME\_H}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ GAME\_H}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <lcom/lcf.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{video_8h}{video.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}stdint.h"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ MAIN\_MENU,}
+\DoxyCodeLine{00019\ \ \ \ \ GAME,}
+\DoxyCodeLine{00020\ \ \ \ \ GAME\_OVER\ \ \ }
+\DoxyCodeLine{00021\ \}\ \mbox{\hyperlink{game_8h_a7899b65f1ea0f655e4bbf8d2a5714285}{GameState}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{struct_tetris_piece_a7e4f7a9025670cc6ef55598c0aff4b33}{type}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{int}\ position[4][2];\ \ \ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_tetris_piece_a81ed297aeff135b08bc42b6eca523e40}{pivot}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_tetris_piece_aaaaf8a89e2b835c53251d952795f7643}{colorIndex}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_tetris_piece_a9669b5e500487283823a5d35578f85fa}{isActive}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00032\ \}\ \mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00043\ \mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}}\ \mbox{\hyperlink{game_8h_a50faeb6b0cc353fcc330d86f3bf1d24b}{create\_piece}}(\textcolor{keywordtype}{char}\ type,\ \textcolor{keywordtype}{int}\ startX,\ \textcolor{keywordtype}{int}\ startY,\ \textcolor{keywordtype}{int}\ colorIndex);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00053\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{game_8h_a51a5d0e17b976f95a88d1f26ae311454}{is\_piece\_at\_bottom}}(\mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}}\ *piece,\ \textcolor{keywordtype}{char}\ screen[24][32],\ \textcolor{keywordtype}{int}\ colorScreen[24][32]);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00060\ \mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}}\ \mbox{\hyperlink{game_8h_aa4b5797d824b14e22871a1456d4c8fad}{generate\_random\_piece}}();}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00071\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{game_8h_a0728dfe8a559317aafe382eda43c0a21}{move\_piece}}(\mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}}\ *piece,\ \textcolor{keywordtype}{int}\ deltaX,\ \textcolor{keywordtype}{int}\ deltaY,\ \textcolor{keywordtype}{char}\ screen[24][32],\ \textcolor{keywordtype}{int}\ colorScreen[24][32]);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00080\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{game_8h_ad3c94caed8f855de91e9a9eb851d7752}{is\_line\_full}}(\textcolor{keywordtype}{char}\ screen[24][32],\ \textcolor{keywordtype}{int}\ line);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{game_8h_aa43ab8ffdcd68cfe8f13552310b2fd9c}{check\_and\_clear\_full\_lines}}(\textcolor{keywordtype}{char}\ screen[24][32],\ \textcolor{keywordtype}{int}\ colorScreen[24][32],\ \mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}}\ pieces[],\ \textcolor{keywordtype}{int}\ num\_pieces);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00100\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{game_8h_a04d1b2517654ecfcfb0b99b7aad10a46}{draw}}(\textcolor{keywordtype}{char}\ screen[24][32],\ \textcolor{keywordtype}{int}\ colorScreen[24][32],\ \mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}}\ pieces[],\ \textcolor{keywordtype}{int}\ num\_pieces);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00109\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{game_8h_a11526869630884b8348c7070d017b129}{rotate\_piece}}(\mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}}\ *piece,\ \textcolor{keywordtype}{char}\ screen[24][32],\ \textcolor{keywordtype}{int}\ colorScreen[24][32]);}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00117\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{game_8h_a7089eb5e620518d548d2b89838f18447}{game\_over}}(\textcolor{keywordtype}{char}\ screen[24][32]);}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00126\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{game_8h_a5256e4c3c9140cbcb0a3079f741613a2}{draw\_centered\_rectangles}}(\textcolor{keywordtype}{int}\ max\_x,\ \textcolor{keywordtype}{int}\ max\_y);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00136\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{game_8h_aa959e47329835f5b03c857ee0aee943a}{draw\_word\_in\_rectangle}}(\textcolor{keywordtype}{int}\ rect\_x,\ \textcolor{keywordtype}{int}\ rect\_y,\ \textcolor{keyword}{const}\ xpm\_row\_t*\ word[],\ \textcolor{keywordtype}{int}\ word\_length);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00145\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{game_8h_a04dd662606b330a79aac91ef08df215e}{drop\_until\_bottom}}(\mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}}\ *piece,\ \textcolor{keywordtype}{char}\ screen[24][32],\ \textcolor{keywordtype}{int}\ colorScreen[24][32]);}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00156\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{game_8h_a8ae19c9f72353a9b16766ecfdd6e523e}{handle\_game\_over}}(\mbox{\hyperlink{game_8h_a7899b65f1ea0f655e4bbf8d2a5714285}{GameState}}\ *state,\ \textcolor{keywordtype}{char}\ screen[24][32],\ \textcolor{keywordtype}{int}\ colorScreen[24][32],\ \mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}}\ pieces[],\ \textcolor{keywordtype}{int}\ *countpiece);}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00165\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{game_8h_a0bbfaec3e0481738b086c8893388078d}{copy\_piece\_to\_screen}}(\mbox{\hyperlink{struct_tetris_piece}{TetrisPiece}}\ *piece,\ \textcolor{keywordtype}{char}\ screen[24][32],\ \textcolor{keywordtype}{int}\ colorScreen[24][32]);}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GAME\_H}}
+
+\end{DoxyCode}

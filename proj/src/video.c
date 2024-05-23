@@ -3,6 +3,10 @@
 #include <stdint.h>
 #include "vbe.h"
 
+uint8_t* video_mem;
+uint8_t* double_buffer;
+vbe_mode_info_t mode_info;
+
 int (set_video_mode)(uint16_t submode) {
   reg86_t reg86;
 
