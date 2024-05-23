@@ -210,35 +210,31 @@ bool game_over(char screen[24][32]) {
 int draw_centered_rectangles(int max_x, int max_y) {
     int rect_width = 300;
     int rect_height = 100;
-    int gap = 30; // Gap between the two rectangles
+    int gap = 30; 
 
-    // Calculate coordinates for the top rectangle
     int top_rect_x = (max_x / 2) - (rect_width / 2);
     int top_rect_y = (max_y / 2) - rect_height - (gap / 2);
 
-    // Calculate coordinates for the bottom rectangle
     int bottom_rect_x = (max_x / 2) - (rect_width / 2);
     int bottom_rect_y = (max_y / 2) + (gap / 2);
 
-    // Draw top rectangle
     if (draw_hline(top_rect_x, top_rect_y, rect_width, 1) != 0) return 1;
     if (draw_vline(top_rect_x, top_rect_y, rect_height, 1) != 0) return 1;
     if (draw_vline(top_rect_x + rect_width, top_rect_y, rect_height, 1) != 0) return 1;
     if (draw_hline(top_rect_x, top_rect_y + rect_height, rect_width, 1) != 0) return 1;
 
-    // Draw bottom rectangle
     if (draw_hline(bottom_rect_x, bottom_rect_y, rect_width, 1) != 0) return 1;
     if (draw_vline(bottom_rect_x, bottom_rect_y, rect_height, 1) != 0) return 1;
     if (draw_vline(bottom_rect_x + rect_width, bottom_rect_y, rect_height, 1) != 0) return 1;
     if (draw_hline(bottom_rect_x, bottom_rect_y + rect_height, rect_width, 1) != 0) return 1;
 
-    return 0; // Success
+    return 0; 
 }
 
 void draw_word_in_rectangle(int rect_x, int rect_y, const xpm_row_t* word[], int word_length) {
-    int letter_width = 7;  // Width of each letter in the XPM
-    int letter_height = 9; // Height of each letter in the XPM
-    int spacing = 2;       // Spacing between letters
+    int letter_width = 7;  
+    int letter_height = 9;
+    int spacing = 2;
 
     int total_width = (letter_width + spacing) * word_length - spacing;
     int start_x = rect_x + (300 - total_width) / 2;

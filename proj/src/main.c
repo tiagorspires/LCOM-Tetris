@@ -5,6 +5,7 @@
 #include "video.h"
 #include "keyboard.h"
 #include <lcom/timer.h>
+#include "matrix.h"
 #include "pictures.h"
 #include "mouse.h"
 #include "game.h"
@@ -14,6 +15,27 @@ extern uint8_t scancode;
 extern int max_x, max_y; 
 extern struct packet pp;
 extern int x, y;
+
+void reset_screen(char screen[24][32], int colorScreen[24][32]) {
+    for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 32; j++) {
+            if (j == 0 || j >= 14 || i == 0 || i == 23) { 
+                screen[i][j] = 'B';  
+                colorScreen[i][j] = 7; 
+            } else if (j < 15) {
+                screen[i][j] = '-';
+                colorScreen[i][j] = 0;
+            } else {
+                screen[i][j] = ' ';  
+                colorScreen[i][j] = 0;
+            }
+        }
+    }
+}
+
+bool is_within_rectangle(int x, int y, int rect_x, int rect_y, int rect_width, int rect_height) {
+    return (x >= rect_x && x <= rect_x + rect_width && y >= rect_y && y <= rect_y + rect_height);
+}
 
 int main(int argc, char *argv[]) {
     lcf_set_language("EN-US");
@@ -41,7 +63,6 @@ int (proj_main_loop) (int argc, char **argv) {
     
     message msg;
 
-    // set stream mode and data reporting
     if(change_data_report_mode(0xF4)) return 1;
     if(change_data_report_mode(0xEA)) return 1;
 
@@ -62,7 +83,7 @@ int (proj_main_loop) (int argc, char **argv) {
                 if (msg.m_notify.interrupts & irq_set_timer) {
                     if(state == GAME){
                         timer_int_handler();
-                        if (counter % 60 == 0) {
+                        if (counter % 30 == 0) {
                             if (is_piece_at_bottom(&pieces[countpiece - 1], screen, colorScreen)) {
                                 check_and_clear_full_lines(screen, colorScreen, pieces, countpiece);
                                 if (game_over(screen)) {
@@ -115,26 +136,13 @@ int (proj_main_loop) (int argc, char **argv) {
                     mouse_ih();
                     mouse_event_handler(&pp);
                     if (state == MAIN_MENU && pp.lb == 1) {
-                        if (x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) - 130 && y <= (max_y / 2) - 30) {
+                        if (is_within_rectangle(x, y, (max_x / 2) - 150, (max_y / 2) - 130, 300, 100)) {
                             TetrisPiece piece = generate_random_piece();
                             pieces[0] = piece;
-                            for (int i = 0; i < 24; i++) {
-                                for (int j = 0; j < 32; j++) {
-                                    if (j == 0 || j >= 14 || i == 0 || i == 23) { 
-                                        screen[i][j] = 'B';  
-                                        colorScreen[i][j] = 7; 
-                                    } else if (j < 15) {
-                                        screen[i][j] = '-';
-                                        colorScreen[i][j] = 0;
-                                    } else {
-                                        screen[i][j] = ' ';  
-                                        colorScreen[i][j] = 0;
-                                    }
-                                }
-                            }
-                            countpiece = 1; // Resetar o contador de peças
+                            reset_screen(screen, colorScreen);
+                            countpiece = 1;
                             state = GAME;
-                        } else if (x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) + 30 && y <= (max_y / 2) + 130) {
+                        } else if (is_within_rectangle(x, y, (max_x / 2) - 150, (max_y / 2) + 30, 300, 100)) {
                             if (timer_unsubscribe_int()) return 1;
                             if (keyboard_unsubscribe()) return 1;
                             if (mouse_unsubscribe_int(&irq_set_mouse)) return 1;
@@ -142,27 +150,14 @@ int (proj_main_loop) (int argc, char **argv) {
                             return 0;
                         }
                     } else if (state == GAME_OVER && pp.lb == 1) {
-                        if (x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) - 130 && y <= (max_y / 2) - 30) {
+                        if (is_within_rectangle(x, y, (max_x / 2) - 150, (max_y / 2) - 130, 300, 100)) {
                             // Reinicializar o estado do jogo
                             TetrisPiece piece = generate_random_piece();
                             pieces[0] = piece;
-                            for (int i = 0; i < 24; i++) {
-                                for (int j = 0; j < 32; j++) {
-                                    if (j == 0 || j >= 14 || i == 0 || i == 23) { 
-                                        screen[i][j] = 'B';  
-                                        colorScreen[i][j] = 7; 
-                                    } else if (j < 15) {
-                                        screen[i][j] = '-';
-                                        colorScreen[i][j] = 0;
-                                    } else {
-                                        screen[i][j] = ' ';  
-                                        colorScreen[i][j] = 0;
-                                    }
-                                }
-                            }
-                            countpiece = 1; // Resetar o contador de peças
+                            reset_screen(screen, colorScreen);
+                            countpiece = 1;
                             state = GAME;
-                        } else if (x >= (max_x / 2) - 150 && x <= (max_x / 2) + 150 && y >= (max_y / 2) + 30 && y <= (max_y / 2) + 130) {
+                        } else if (is_within_rectangle(x, y, (max_x / 2) - 150, (max_y / 2) + 30, 300, 100)) {
                             if (timer_unsubscribe_int()) return 1;
                             if (keyboard_unsubscribe()) return 1;
                             if (mouse_unsubscribe_int(&irq_set_mouse)) return 1;
@@ -177,21 +172,17 @@ int (proj_main_loop) (int argc, char **argv) {
             }
             if (state == MAIN_MENU) {
                 clean_buffer();
-                // draw the mouse cursor according to his pp position
                 draw_xpm(x, y, mouse_cursor);
                 if (draw_centered_rectangles(max_x, max_y) != 0) {
                     printf("Failed to draw rectangles.\n");
-                    return 1;  // Handle failure case
+                    return 1;  
                 }
-
-                // Draw the words "PLAY" and "EXIT" in the rectangles
                 xpm_row_t const *play_word[] = {P, L, A, Y};
                 xpm_row_t const *exit_word[] = {E, X, I, T};
 
-                // Calculate coordinates for the top rectangle
                 int top_rect_x = (max_x / 2) - 150;
                 int top_rect_y = (max_y / 2) - 130;
-                // Calculate coordinates for the bottom rectangle
+
                 int bottom_rect_x = (max_x / 2) - 150;
                 int bottom_rect_y = (max_y / 2) + 30;
 
