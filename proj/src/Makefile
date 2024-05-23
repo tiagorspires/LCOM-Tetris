@@ -6,7 +6,7 @@ PROG=proj
 # .PATH: ${.CURDIR}/serial
 
 # source code files to be compiled
-SRCS = main.c timer.c video.c utils.c keyboard.c matrix.c mouse.c
+SRCS = main.c timer.c video.c utils.c keyboard.c mouse.c
 
 # additional compilation flags ("-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set)
 CFLAGS += -pedantic

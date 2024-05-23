@@ -13,7 +13,7 @@ typedef enum {
     MAIN_MENU,
     GAME,
     GAME_OVER   
-}game_state_t;
+} game_state_t;
 
 extern int counter;
 extern uint8_t scancode;
@@ -295,6 +295,18 @@ void drop_until_bottom(TetrisPiece *piece, char screen[24][32], int colorScreen[
     }
 }
 
+void handle_game_over(game_state_t *state, char screen[24][32], int colorScreen[24][32], TetrisPiece pieces[], int *countpiece) {
+    *state = GAME_OVER;
+    for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 32; j++) {
+            screen[i][j] = '-';
+            colorScreen[i][j] = 63;
+        }
+    }
+    draw(screen, colorScreen, pieces, *countpiece);
+    swap_buffer();
+}
+
 int (proj_main_loop) (int argc, char **argv) {
 
     game_state_t state = MAIN_MENU;
@@ -310,7 +322,6 @@ int (proj_main_loop) (int argc, char **argv) {
     uint8_t irq_set_keyboard;
     uint8_t irq_set_timer;
     uint8_t irq_set_mouse;
-    
     
     message msg;
 
@@ -343,6 +354,9 @@ int (proj_main_loop) (int argc, char **argv) {
                                     pieces[countpiece].isActive = true;
                                     countpiece++;
                                 }
+                                if (game_over(screen)) {
+                                    handle_game_over(&state, screen, colorScreen, pieces, &countpiece);
+                                }
                             } else {
                                 move_piece(&pieces[countpiece - 1], 0, 1, screen, colorScreen);
                             }
@@ -373,6 +387,9 @@ int (proj_main_loop) (int argc, char **argv) {
                                     break;
                                 default:
                                     break;
+                            }
+                            if (game_over(screen)) {
+                                handle_game_over(&state, screen, colorScreen, pieces, &countpiece);
                             }
                         } else {
                             state = GAME_OVER;
@@ -507,5 +524,3 @@ int (proj_main_loop) (int argc, char **argv) {
     if (vg_exit()) return 1;
     return 0;
 }
-
-
