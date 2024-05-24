@@ -1,0 +1,150 @@
+\doxysection{mouse.\+h File Reference}
+\hypertarget{mouse_8h}{}\label{mouse_8h}\index{mouse.h@{mouse.h}}
+
+
+Mouse interface functions and definitions.  
+
+
+{\ttfamily \#include "{}i8042.\+h"{}}\newline
+{\ttfamily \#include $<$lcom/lcf.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{mouse_8h_a9da18257ff113b686bb826d154bfaa87}{mouse\+\_\+subscribe\+\_\+int}} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}bit\+\_\+no)
+\begin{DoxyCompactList}\small\item\em Subscribes to mouse interrupts. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{mouse_8h_a685ad2706aca36d9869a30a19b9f446a}{mouse\+\_\+unsubscribe\+\_\+int}} ()
+\begin{DoxyCompactList}\small\item\em Unsubscribes from mouse interrupts. \end{DoxyCompactList}\item 
+\Hypertarget{mouse_8h_a834b6d7efe311484d6da234db333cb97}\label{mouse_8h_a834b6d7efe311484d6da234db333cb97} 
+void {\bfseries mouse\+\_\+ih} ()
+\begin{DoxyCompactList}\small\item\em Mouse interrupt handler. Reads the mouse data from the output buffer. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{mouse_8h_a68523c70ba9365321b7b8a24ca8a8587}{send\+\_\+command}} (uint8\+\_\+t command)
+\begin{DoxyCompactList}\small\item\em Sends a command to the mouse. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{mouse_8h_a3044dc4155ea758b6a7b7f6e4abe3696}{read\+\_\+buffer}} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}data)
+\begin{DoxyCompactList}\small\item\em Reads data from the output buffer. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{mouse_8h_a9b2558009e1b213a1c8eefba7ccf0c1d}{is\+\_\+input\+\_\+buffer\+\_\+full}} ()
+\begin{DoxyCompactList}\small\item\em Checks if the input buffer is full. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{mouse_8h_abda37b6db1abe1cb18241e6026963472}{change\+\_\+data\+\_\+report\+\_\+mode}} (uint8\+\_\+t set)
+\begin{DoxyCompactList}\small\item\em Changes the data report mode of the mouse. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{mouse_8h_a43497a5fd88eb9f5093d334de9060e77}{mouse\+\_\+event\+\_\+handler}} (struct packet \texorpdfstring{$\ast$}{*}pp)
+\begin{DoxyCompactList}\small\item\em Handles mouse events and updates the cursor position. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Mouse interface functions and definitions. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{mouse_8h_abda37b6db1abe1cb18241e6026963472}\index{mouse.h@{mouse.h}!change\_data\_report\_mode@{change\_data\_report\_mode}}
+\index{change\_data\_report\_mode@{change\_data\_report\_mode}!mouse.h@{mouse.h}}
+\doxysubsubsection{\texorpdfstring{change\_data\_report\_mode()}{change\_data\_report\_mode()}}
+{\footnotesize\ttfamily \label{mouse_8h_abda37b6db1abe1cb18241e6026963472} 
+int change\+\_\+data\+\_\+report\+\_\+mode (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{set}{}\end{DoxyParamCaption})}
+
+
+
+Changes the data report mode of the mouse. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em set} & The command to set the data report mode. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{mouse_8h_a9b2558009e1b213a1c8eefba7ccf0c1d}\index{mouse.h@{mouse.h}!is\_input\_buffer\_full@{is\_input\_buffer\_full}}
+\index{is\_input\_buffer\_full@{is\_input\_buffer\_full}!mouse.h@{mouse.h}}
+\doxysubsubsection{\texorpdfstring{is\_input\_buffer\_full()}{is\_input\_buffer\_full()}}
+{\footnotesize\ttfamily \label{mouse_8h_a9b2558009e1b213a1c8eefba7ccf0c1d} 
+bool is\+\_\+input\+\_\+buffer\+\_\+full (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Checks if the input buffer is full. 
+
+\begin{DoxyReturn}{Returns}
+True if the input buffer is full, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{mouse_8h_a43497a5fd88eb9f5093d334de9060e77}\index{mouse.h@{mouse.h}!mouse\_event\_handler@{mouse\_event\_handler}}
+\index{mouse\_event\_handler@{mouse\_event\_handler}!mouse.h@{mouse.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_event\_handler()}{mouse\_event\_handler()}}
+{\footnotesize\ttfamily \label{mouse_8h_a43497a5fd88eb9f5093d334de9060e77} 
+void mouse\+\_\+event\+\_\+handler (\begin{DoxyParamCaption}\item[{struct packet \texorpdfstring{$\ast$}{*}}]{pp}{}\end{DoxyParamCaption})}
+
+
+
+Handles mouse events and updates the cursor position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pp} & The packet structure containing the mouse data. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{mouse_8h_a9da18257ff113b686bb826d154bfaa87}\index{mouse.h@{mouse.h}!mouse\_subscribe\_int@{mouse\_subscribe\_int}}
+\index{mouse\_subscribe\_int@{mouse\_subscribe\_int}!mouse.h@{mouse.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_subscribe\_int()}{mouse\_subscribe\_int()}}
+{\footnotesize\ttfamily \label{mouse_8h_a9da18257ff113b686bb826d154bfaa87} 
+int mouse\+\_\+subscribe\+\_\+int (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{bit\+\_\+no}{}\end{DoxyParamCaption})}
+
+
+
+Subscribes to mouse interrupts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bit\+\_\+no} & Address of memory to be initialized with the bit number to be set in the mask returned upon an interrupt. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{mouse_8h_a685ad2706aca36d9869a30a19b9f446a}\index{mouse.h@{mouse.h}!mouse\_unsubscribe\_int@{mouse\_unsubscribe\_int}}
+\index{mouse\_unsubscribe\_int@{mouse\_unsubscribe\_int}!mouse.h@{mouse.h}}
+\doxysubsubsection{\texorpdfstring{mouse\_unsubscribe\_int()}{mouse\_unsubscribe\_int()}}
+{\footnotesize\ttfamily \label{mouse_8h_a685ad2706aca36d9869a30a19b9f446a} 
+int mouse\+\_\+unsubscribe\+\_\+int (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Unsubscribes from mouse interrupts. 
+
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{mouse_8h_a3044dc4155ea758b6a7b7f6e4abe3696}\index{mouse.h@{mouse.h}!read\_buffer@{read\_buffer}}
+\index{read\_buffer@{read\_buffer}!mouse.h@{mouse.h}}
+\doxysubsubsection{\texorpdfstring{read\_buffer()}{read\_buffer()}}
+{\footnotesize\ttfamily \label{mouse_8h_a3044dc4155ea758b6a7b7f6e4abe3696} 
+int read\+\_\+buffer (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Reads data from the output buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & Pointer to store the read data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{mouse_8h_a68523c70ba9365321b7b8a24ca8a8587}\index{mouse.h@{mouse.h}!send\_command@{send\_command}}
+\index{send\_command@{send\_command}!mouse.h@{mouse.h}}
+\doxysubsubsection{\texorpdfstring{send\_command()}{send\_command()}}
+{\footnotesize\ttfamily \label{mouse_8h_a68523c70ba9365321b7b8a24ca8a8587} 
+int send\+\_\+command (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{command}{}\end{DoxyParamCaption})}
+
+
+
+Sends a command to the mouse. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & The command to send. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}

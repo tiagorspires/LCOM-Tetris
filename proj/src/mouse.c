@@ -1,39 +1,27 @@
 #include "i8042.h"
+#include <lcom/lcf.h>
+#include "mouse.h"
 
-int kbc_hook_id=2;
-int timer_hook_id=1;
+
+int mouse_hook_id=2;
 uint32_t count=0;
 struct packet pp;
 int i=0;
 bool valid_packet=true;
 bool update_count=false;
+int x = 10, y = 10;
+int max_x = 1024, max_y = 768;
 
-
-int (timer_subscribe_int)(uint8_t *bit_no) {
-  if(bit_no == NULL) return 1;
-  *bit_no = BIT(timer_hook_id);
-  if(sys_irqsetpolicy(TIMER0_IRQ, IRQ_REENABLE, &timer_hook_id)) return 1;
-  return 0;
-}
-
-int (timer_unsubscribe_int)() {
-  if(sys_irqrmpolicy(&timer_hook_id)) return 1;
-  return 0;
-}
-
-void (timer_int_handler)() {
-  count++;
-}
 
 int (mouse_subscribe_int)(uint8_t* bit_no){
   if(bit_no == NULL) return 1;
-  *bit_no = kbc_hook_id;
-  if(sys_irqsetpolicy(MOUSE_IRQ, IRQ_REENABLE|IRQ_EXCLUSIVE, &kbc_hook_id)) return 1;
+  *bit_no = BIT(mouse_hook_id);
+  if(sys_irqsetpolicy(IRQ_LINE_MOUSE, IRQ_REENABLE|IRQ_EXCLUSIVE, &mouse_hook_id)!=0) return 1;
   return 0;
 }
 
 int (mouse_unsubscribe_int)(){
-  if(sys_irqrmpolicy(&kbc_hook_id)) return 1;
+  if(sys_irqrmpolicy(&mouse_hook_id)) return 1;
   return 0;
 }
 
@@ -42,13 +30,13 @@ void (mouse_ih)(){
 
   if(util_sys_inb(STATUS_PORT,&status)) return ;
 
-  if((status & AUX) && (status & OUT_BUFFER)){
+  if((status & MOUSE) && (status & OUT_BUF_FULL)){
 
     uint8_t byte;
 
     if(util_sys_inb(DATA_PORT,&byte)) return ;
 
-    if(!(status & ERRORS)){
+    if(!(status & ERROR)){
 
         if(i==0 && (!(byte & FIRST_BYTE))){
           i--;
@@ -84,7 +72,6 @@ void (mouse_ih)(){
             pp.delta_x = delta_x;
             pp.delta_y = delta_y;
 
-            mouse_print_packet(&pp);
             update_count=true;
             i=-1;
           }
@@ -95,6 +82,80 @@ void (mouse_ih)(){
     i++;
   }
 }
+
+int send_command(uint8_t command) {
+    return sys_outb(STATUS_PORT, command);
+}
+
+int read_buffer(uint8_t *buffer) {
+    return util_sys_inb(DATA_PORT, buffer);
+}
+
+bool is_input_buffer_full() {
+    uint8_t status;
+    if (util_sys_inb(STATUS_PORT, &status)) {
+        return false;
+    }
+    return status & IN_BUF_FULL;
+}
+
+int change_data_report_mode(uint8_t set) {
+    int errorCount = 0;
+    bool error = false;
+    uint8_t receiver;
+
+    while (errorCount < 2) {
+        if (send_command(BYTE_TO_MOUSE)) {
+            error = true;
+            break;
+        }
+
+        int commandCount = 0;
+        while (commandCount < 3) {
+            if (is_input_buffer_full()) {
+                commandCount++;
+            } else {
+                if (sys_outb(DATA_PORT, set)) {
+                    error = true;
+                    break;
+                }
+                if (read_buffer(&receiver)) {
+                    error = true;
+                    break;
+                }
+                break;
+            }
+        }
+
+        if (error) {
+            break;
+        }
+
+        if (receiver == ACK) {
+            return 0;
+        } else if (receiver == NACK) {
+            errorCount++;
+        } else if (receiver == ERROR_REP) {
+            error = true;
+            break;
+        }
+    }
+
+    return error ? 1 : 0;
+}
+
+void mouse_event_handler(struct packet *pp){
+  x += pp->delta_x;
+  y -= pp->delta_y;
+
+  if (x < 0) x = 0;
+  else if (x > max_x - 1) x = max_x - 1;
+
+  if (y < 0) y = 0;
+  else if (y > max_y - 1) y = max_y - 1;
+}
+
+
 
 
 

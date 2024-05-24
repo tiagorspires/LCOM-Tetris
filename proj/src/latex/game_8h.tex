@@ -1,0 +1,347 @@
+\doxysection{game.\+h File Reference}
+\hypertarget{game_8h}{}\label{game_8h}\index{game.h@{game.h}}
+
+
+Functions and data structures for the Tetris game.  
+
+
+{\ttfamily \#include $<$lcom/lcf.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include "{}video.\+h"{}}\newline
+{\ttfamily \#include "{}stdint.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}}
+\begin{DoxyCompactList}\small\item\em Structure representing a Tetris piece. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{game_8h_a7899b65f1ea0f655e4bbf8d2a5714285}\label{game_8h_a7899b65f1ea0f655e4bbf8d2a5714285} 
+enum \mbox{\hyperlink{game_8h_a7899b65f1ea0f655e4bbf8d2a5714285}{Game\+State}} \{ {\bfseries MAIN\+\_\+\+MENU}
+, {\bfseries GAME}
+, {\bfseries GAME\+\_\+\+OVER}
+ \}
+\begin{DoxyCompactList}\small\item\em Game states for the Tetris game. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \mbox{\hyperlink{game_8h_a50faeb6b0cc353fcc330d86f3bf1d24b}{create\+\_\+piece}} (char type, int startX, int startY, int color\+Index)
+\begin{DoxyCompactList}\small\item\em Creates a Tetris piece of the given type at the specified starting position. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{game_8h_a51a5d0e17b976f95a88d1f26ae311454}{is\+\_\+piece\+\_\+at\+\_\+bottom}} (\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}piece, char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]})
+\begin{DoxyCompactList}\small\item\em Checks if the Tetris piece is at the bottom. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \mbox{\hyperlink{game_8h_aa4b5797d824b14e22871a1456d4c8fad}{generate\+\_\+random\+\_\+piece}} ()
+\begin{DoxyCompactList}\small\item\em Generates a random Tetris piece. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{game_8h_a0728dfe8a559317aafe382eda43c0a21}{move\+\_\+piece}} (\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}piece, int deltaX, int deltaY, char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]})
+\begin{DoxyCompactList}\small\item\em Moves the Tetris piece by the specified deltas. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{game_8h_ad3c94caed8f855de91e9a9eb851d7752}{is\+\_\+line\+\_\+full}} (char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int line)
+\begin{DoxyCompactList}\small\item\em Checks if a line on the screen is full. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{game_8h_aa43ab8ffdcd68cfe8f13552310b2fd9c}{check\+\_\+and\+\_\+clear\+\_\+full\+\_\+lines}} (char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, \mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} pieces\mbox{[}$\,$\mbox{]}, int num\+\_\+pieces)
+\begin{DoxyCompactList}\small\item\em Checks and clears full lines on the screen. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{game_8h_a04d1b2517654ecfcfb0b99b7aad10a46}{draw}} (char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, \mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} pieces\mbox{[}$\,$\mbox{]}, int num\+\_\+pieces)
+\begin{DoxyCompactList}\small\item\em Draws the game screen. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{game_8h_a11526869630884b8348c7070d017b129}{rotate\+\_\+piece}} (\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}piece, char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]})
+\begin{DoxyCompactList}\small\item\em Rotates a Tetris piece. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{game_8h_a7089eb5e620518d548d2b89838f18447}{game\+\_\+over}} (char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]})
+\begin{DoxyCompactList}\small\item\em Checks if the game is over. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{game_8h_a5256e4c3c9140cbcb0a3079f741613a2}{draw\+\_\+centered\+\_\+rectangles}} (int max\+\_\+x, int max\+\_\+y)
+\begin{DoxyCompactList}\small\item\em Draws two centered rectangles on the screen. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{game_8h_aa959e47329835f5b03c857ee0aee943a}{draw\+\_\+word\+\_\+in\+\_\+rectangle}} (int rect\+\_\+x, int rect\+\_\+y, const xpm\+\_\+row\+\_\+t \texorpdfstring{$\ast$}{*}word\mbox{[}$\,$\mbox{]}, int word\+\_\+length)
+\begin{DoxyCompactList}\small\item\em Draws a word inside a rectangle. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{game_8h_a04dd662606b330a79aac91ef08df215e}{drop\+\_\+until\+\_\+bottom}} (\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}piece, char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]})
+\begin{DoxyCompactList}\small\item\em Drops a Tetris piece until it reaches the bottom. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{game_8h_a8ae19c9f72353a9b16766ecfdd6e523e}{handle\+\_\+game\+\_\+over}} (\mbox{\hyperlink{game_8h_a7899b65f1ea0f655e4bbf8d2a5714285}{Game\+State}} \texorpdfstring{$\ast$}{*}state, char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, \mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} pieces\mbox{[}$\,$\mbox{]}, int \texorpdfstring{$\ast$}{*}countpiece)
+\begin{DoxyCompactList}\small\item\em Handles the game over state. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{game_8h_a0bbfaec3e0481738b086c8893388078d}{copy\+\_\+piece\+\_\+to\+\_\+screen}} (\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}piece, char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]})
+\begin{DoxyCompactList}\small\item\em Copies the Tetris piece to the screen. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Functions and data structures for the Tetris game. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{game_8h_aa43ab8ffdcd68cfe8f13552310b2fd9c}\index{game.h@{game.h}!check\_and\_clear\_full\_lines@{check\_and\_clear\_full\_lines}}
+\index{check\_and\_clear\_full\_lines@{check\_and\_clear\_full\_lines}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{check\_and\_clear\_full\_lines()}{check\_and\_clear\_full\_lines()}}
+{\footnotesize\ttfamily \label{game_8h_aa43ab8ffdcd68cfe8f13552310b2fd9c} 
+void check\+\_\+and\+\_\+clear\+\_\+full\+\_\+lines (\begin{DoxyParamCaption}\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{int}]{color\+Screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}}}]{pieces}{\mbox{[}$\,$\mbox{]}, }\item[{int}]{num\+\_\+pieces}{}\end{DoxyParamCaption})}
+
+
+
+Checks and clears full lines on the screen. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em screen} & The game screen. \\
+\hline
+{\em color\+Screen} & The color screen. \\
+\hline
+{\em pieces} & The array of Tetris pieces. \\
+\hline
+{\em num\+\_\+pieces} & The number of pieces. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{game_8h_a0bbfaec3e0481738b086c8893388078d}\index{game.h@{game.h}!copy\_piece\_to\_screen@{copy\_piece\_to\_screen}}
+\index{copy\_piece\_to\_screen@{copy\_piece\_to\_screen}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{copy\_piece\_to\_screen()}{copy\_piece\_to\_screen()}}
+{\footnotesize\ttfamily \label{game_8h_a0bbfaec3e0481738b086c8893388078d} 
+void copy\+\_\+piece\+\_\+to\+\_\+screen (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}}]{piece}{, }\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{int}]{color\+Screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Copies the Tetris piece to the screen. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em piece} & The Tetris piece to copy. \\
+\hline
+{\em screen} & The game screen. \\
+\hline
+{\em color\+Screen} & The color screen. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{game_8h_a50faeb6b0cc353fcc330d86f3bf1d24b}\index{game.h@{game.h}!create\_piece@{create\_piece}}
+\index{create\_piece@{create\_piece}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{create\_piece()}{create\_piece()}}
+{\footnotesize\ttfamily \label{game_8h_a50faeb6b0cc353fcc330d86f3bf1d24b} 
+\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} create\+\_\+piece (\begin{DoxyParamCaption}\item[{char}]{type}{, }\item[{int}]{startX}{, }\item[{int}]{startY}{, }\item[{int}]{color\+Index}{}\end{DoxyParamCaption})}
+
+
+
+Creates a Tetris piece of the given type at the specified starting position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & The type of the Tetris piece. \\
+\hline
+{\em startX} & The starting X position. \\
+\hline
+{\em startY} & The starting Y position. \\
+\hline
+{\em color\+Index} & The color index of the piece. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The created Tetris piece. 
+\end{DoxyReturn}
+\Hypertarget{game_8h_a04d1b2517654ecfcfb0b99b7aad10a46}\index{game.h@{game.h}!draw@{draw}}
+\index{draw@{draw}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily \label{game_8h_a04d1b2517654ecfcfb0b99b7aad10a46} 
+void draw (\begin{DoxyParamCaption}\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{int}]{color\+Screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}}}]{pieces}{\mbox{[}$\,$\mbox{]}, }\item[{int}]{num\+\_\+pieces}{}\end{DoxyParamCaption})}
+
+
+
+Draws the game screen. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em screen} & The game screen. \\
+\hline
+{\em color\+Screen} & The color screen. \\
+\hline
+{\em pieces} & The array of Tetris pieces. \\
+\hline
+{\em num\+\_\+pieces} & The number of pieces. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{game_8h_a5256e4c3c9140cbcb0a3079f741613a2}\index{game.h@{game.h}!draw\_centered\_rectangles@{draw\_centered\_rectangles}}
+\index{draw\_centered\_rectangles@{draw\_centered\_rectangles}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{draw\_centered\_rectangles()}{draw\_centered\_rectangles()}}
+{\footnotesize\ttfamily \label{game_8h_a5256e4c3c9140cbcb0a3079f741613a2} 
+int draw\+\_\+centered\+\_\+rectangles (\begin{DoxyParamCaption}\item[{int}]{max\+\_\+x}{, }\item[{int}]{max\+\_\+y}{}\end{DoxyParamCaption})}
+
+
+
+Draws two centered rectangles on the screen. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em max\+\_\+x} & The maximum X dimension of the screen. \\
+\hline
+{\em max\+\_\+y} & The maximum Y dimension of the screen. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{game_8h_aa959e47329835f5b03c857ee0aee943a}\index{game.h@{game.h}!draw\_word\_in\_rectangle@{draw\_word\_in\_rectangle}}
+\index{draw\_word\_in\_rectangle@{draw\_word\_in\_rectangle}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{draw\_word\_in\_rectangle()}{draw\_word\_in\_rectangle()}}
+{\footnotesize\ttfamily \label{game_8h_aa959e47329835f5b03c857ee0aee943a} 
+void draw\+\_\+word\+\_\+in\+\_\+rectangle (\begin{DoxyParamCaption}\item[{int}]{rect\+\_\+x}{, }\item[{int}]{rect\+\_\+y}{, }\item[{const xpm\+\_\+row\+\_\+t \texorpdfstring{$\ast$}{*}}]{word}{\mbox{[}$\,$\mbox{]}, }\item[{int}]{word\+\_\+length}{}\end{DoxyParamCaption})}
+
+
+
+Draws a word inside a rectangle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rect\+\_\+x} & The X coordinate of the rectangle. \\
+\hline
+{\em rect\+\_\+y} & The Y coordinate of the rectangle. \\
+\hline
+{\em word} & The word to draw. \\
+\hline
+{\em word\+\_\+length} & The length of the word. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{game_8h_a04dd662606b330a79aac91ef08df215e}\index{game.h@{game.h}!drop\_until\_bottom@{drop\_until\_bottom}}
+\index{drop\_until\_bottom@{drop\_until\_bottom}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{drop\_until\_bottom()}{drop\_until\_bottom()}}
+{\footnotesize\ttfamily \label{game_8h_a04dd662606b330a79aac91ef08df215e} 
+void drop\+\_\+until\+\_\+bottom (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}}]{piece}{, }\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{int}]{color\+Screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Drops a Tetris piece until it reaches the bottom. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em piece} & The Tetris piece to drop. \\
+\hline
+{\em screen} & The game screen. \\
+\hline
+{\em color\+Screen} & The color screen. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{game_8h_a7089eb5e620518d548d2b89838f18447}\index{game.h@{game.h}!game\_over@{game\_over}}
+\index{game\_over@{game\_over}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{game\_over()}{game\_over()}}
+{\footnotesize\ttfamily \label{game_8h_a7089eb5e620518d548d2b89838f18447} 
+bool game\+\_\+over (\begin{DoxyParamCaption}\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Checks if the game is over. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em screen} & The game screen. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the game is over, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{game_8h_aa4b5797d824b14e22871a1456d4c8fad}\index{game.h@{game.h}!generate\_random\_piece@{generate\_random\_piece}}
+\index{generate\_random\_piece@{generate\_random\_piece}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{generate\_random\_piece()}{generate\_random\_piece()}}
+{\footnotesize\ttfamily \label{game_8h_aa4b5797d824b14e22871a1456d4c8fad} 
+\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} generate\+\_\+random\+\_\+piece (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Generates a random Tetris piece. 
+
+\begin{DoxyReturn}{Returns}
+The generated Tetris piece. 
+\end{DoxyReturn}
+\Hypertarget{game_8h_a8ae19c9f72353a9b16766ecfdd6e523e}\index{game.h@{game.h}!handle\_game\_over@{handle\_game\_over}}
+\index{handle\_game\_over@{handle\_game\_over}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{handle\_game\_over()}{handle\_game\_over()}}
+{\footnotesize\ttfamily \label{game_8h_a8ae19c9f72353a9b16766ecfdd6e523e} 
+void handle\+\_\+game\+\_\+over (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{game_8h_a7899b65f1ea0f655e4bbf8d2a5714285}{Game\+State}} \texorpdfstring{$\ast$}{*}}]{state}{, }\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{int}]{color\+Screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}}}]{pieces}{\mbox{[}$\,$\mbox{]}, }\item[{int \texorpdfstring{$\ast$}{*}}]{countpiece}{}\end{DoxyParamCaption})}
+
+
+
+Handles the game over state. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & The current game state. \\
+\hline
+{\em screen} & The game screen. \\
+\hline
+{\em color\+Screen} & The color screen. \\
+\hline
+{\em pieces} & The array of Tetris pieces. \\
+\hline
+{\em countpiece} & The count of pieces. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{game_8h_ad3c94caed8f855de91e9a9eb851d7752}\index{game.h@{game.h}!is\_line\_full@{is\_line\_full}}
+\index{is\_line\_full@{is\_line\_full}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{is\_line\_full()}{is\_line\_full()}}
+{\footnotesize\ttfamily \label{game_8h_ad3c94caed8f855de91e9a9eb851d7752} 
+bool is\+\_\+line\+\_\+full (\begin{DoxyParamCaption}\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{int}]{line}{}\end{DoxyParamCaption})}
+
+
+
+Checks if a line on the screen is full. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em screen} & The game screen. \\
+\hline
+{\em line} & The line to check. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the line is full, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{game_8h_a51a5d0e17b976f95a88d1f26ae311454}\index{game.h@{game.h}!is\_piece\_at\_bottom@{is\_piece\_at\_bottom}}
+\index{is\_piece\_at\_bottom@{is\_piece\_at\_bottom}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{is\_piece\_at\_bottom()}{is\_piece\_at\_bottom()}}
+{\footnotesize\ttfamily \label{game_8h_a51a5d0e17b976f95a88d1f26ae311454} 
+bool is\+\_\+piece\+\_\+at\+\_\+bottom (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}}]{piece}{, }\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{int}]{color\+Screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Checks if the Tetris piece is at the bottom. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em piece} & The Tetris piece to check. \\
+\hline
+{\em screen} & The game screen. \\
+\hline
+{\em color\+Screen} & The color screen. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the piece is at the bottom, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{game_8h_a0728dfe8a559317aafe382eda43c0a21}\index{game.h@{game.h}!move\_piece@{move\_piece}}
+\index{move\_piece@{move\_piece}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{move\_piece()}{move\_piece()}}
+{\footnotesize\ttfamily \label{game_8h_a0728dfe8a559317aafe382eda43c0a21} 
+void move\+\_\+piece (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}}]{piece}{, }\item[{int}]{deltaX}{, }\item[{int}]{deltaY}{, }\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{int}]{color\+Screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Moves the Tetris piece by the specified deltas. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em piece} & The Tetris piece to move. \\
+\hline
+{\em deltaX} & The delta in the X direction. \\
+\hline
+{\em deltaY} & The delta in the Y direction. \\
+\hline
+{\em screen} & The game screen. \\
+\hline
+{\em color\+Screen} & The color screen. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{game_8h_a11526869630884b8348c7070d017b129}\index{game.h@{game.h}!rotate\_piece@{rotate\_piece}}
+\index{rotate\_piece@{rotate\_piece}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{rotate\_piece()}{rotate\_piece()}}
+{\footnotesize\ttfamily \label{game_8h_a11526869630884b8348c7070d017b129} 
+void rotate\+\_\+piece (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}}]{piece}{, }\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{int}]{color\+Screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Rotates a Tetris piece. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em piece} & The Tetris piece to rotate. \\
+\hline
+{\em screen} & The game screen. \\
+\hline
+{\em color\+Screen} & The color screen. \\
+\hline
+\end{DoxyParams}

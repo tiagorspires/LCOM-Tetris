@@ -1,0 +1,266 @@
+\doxysection{video.\+h File Reference}
+\hypertarget{video_8h}{}\label{video_8h}\index{video.h@{video.h}}
+
+
+Video graphics functions and definitions.  
+
+
+{\ttfamily \#include $<$lcom/lcf.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include "{}vbe.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{video_8h_a2e7785b3a4a6da77b7fede5e76173fd1}{set\+\_\+video\+\_\+mode}} (uint16\+\_\+t submode)
+\begin{DoxyCompactList}\small\item\em Sets the video mode. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{video_8h_aa44c1995f8a9a3e1e84115d430b61113}{get\+\_\+mode\+\_\+info}} (uint16\+\_\+t mode)
+\begin{DoxyCompactList}\small\item\em Retrieves the mode information. \end{DoxyCompactList}\item 
+unsigned int \mbox{\hyperlink{video_8h_a5d62ec4f87ce2a555ac1784bc44f243f}{get\+\_\+frame\+\_\+buffer\+\_\+size}} ()
+\begin{DoxyCompactList}\small\item\em Calculates the size of the frame buffer. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{video_8h_affe13d565147951f3cc7a0cf456a8f63}{set\+\_\+frame\+\_\+buffer}} (uint16\+\_\+t mode)
+\begin{DoxyCompactList}\small\item\em Sets up the frame buffer. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{video_8h_a4eb3c78cdbecea0d7a565fa16b9225f4}{set\+\_\+pixel\+\_\+color}} (uint16\+\_\+t x, uint16\+\_\+t y, uint32\+\_\+t color)
+\begin{DoxyCompactList}\small\item\em Sets the color of a pixel. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{video_8h_a5a4a85e95c113e0f9f6f5db7d1a08e8a}{draw\+\_\+hline}} (uint16\+\_\+t x, uint16\+\_\+t y, uint16\+\_\+t len, uint32\+\_\+t color)
+\begin{DoxyCompactList}\small\item\em Draws a horizontal line. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{video_8h_ae602948d26317c30095613ee80857ce1}{draw\+\_\+vline}} (uint16\+\_\+t x, uint16\+\_\+t y, uint16\+\_\+t len, uint32\+\_\+t color)
+\begin{DoxyCompactList}\small\item\em Draws a vertical line. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{video_8h_acac59940e880980fe328945b1c9463e4}{draw\+\_\+rectangle}} (uint16\+\_\+t x, uint16\+\_\+t y, uint16\+\_\+t width, uint16\+\_\+t height, uint32\+\_\+t color)
+\begin{DoxyCompactList}\small\item\em Draws a rectangle. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{video_8h_a489104f301358d3ff21d0572c187613a}{draw\+\_\+xpm}} (uint16\+\_\+t x, uint16\+\_\+t y, xpm\+\_\+map\+\_\+t xpm)
+\begin{DoxyCompactList}\small\item\em Draws an XPM image. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{video_8h_a66853ab57739c78bf08eac531e2edb10}{clean\+\_\+buffer}} ()
+\begin{DoxyCompactList}\small\item\em Cleans the buffer by setting it to zero. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{video_8h_a2c402fef55ded43fe29137c5a2e0ee28}{swap\+\_\+buffer}} ()
+\begin{DoxyCompactList}\small\item\em Swaps the buffer to display the contents. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{video_8h_a51ca412bef7e65e7fb0a170abe47b36b}\label{video_8h_a51ca412bef7e65e7fb0a170abe47b36b} 
+uint8\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries video\+\_\+mem}
+\item 
+\Hypertarget{video_8h_a6473b5098c114ab97fc4cde61684ab7b}\label{video_8h_a6473b5098c114ab97fc4cde61684ab7b} 
+uint8\+\_\+t \texorpdfstring{$\ast$}{*} {\bfseries double\+\_\+buffer}
+\item 
+\Hypertarget{video_8h_a9fcc2243068f8e628648febc0909c509}\label{video_8h_a9fcc2243068f8e628648febc0909c509} 
+vbe\+\_\+mode\+\_\+info\+\_\+t {\bfseries mode\+\_\+info}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Video graphics functions and definitions. 
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{video_8h_a66853ab57739c78bf08eac531e2edb10}\index{video.h@{video.h}!clean\_buffer@{clean\_buffer}}
+\index{clean\_buffer@{clean\_buffer}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{clean\_buffer()}{clean\_buffer()}}
+{\footnotesize\ttfamily \label{video_8h_a66853ab57739c78bf08eac531e2edb10} 
+int clean\+\_\+buffer (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Cleans the buffer by setting it to zero. 
+
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{video_8h_a5a4a85e95c113e0f9f6f5db7d1a08e8a}\index{video.h@{video.h}!draw\_hline@{draw\_hline}}
+\index{draw\_hline@{draw\_hline}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{draw\_hline()}{draw\_hline()}}
+{\footnotesize\ttfamily \label{video_8h_a5a4a85e95c113e0f9f6f5db7d1a08e8a} 
+int draw\+\_\+hline (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{x}{, }\item[{uint16\+\_\+t}]{y}{, }\item[{uint16\+\_\+t}]{len}{, }\item[{uint32\+\_\+t}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Draws a horizontal line. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The starting X coordinate of the line. \\
+\hline
+{\em y} & The Y coordinate of the line. \\
+\hline
+{\em len} & The length of the line. \\
+\hline
+{\em color} & The color to set. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{video_8h_acac59940e880980fe328945b1c9463e4}\index{video.h@{video.h}!draw\_rectangle@{draw\_rectangle}}
+\index{draw\_rectangle@{draw\_rectangle}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{draw\_rectangle()}{draw\_rectangle()}}
+{\footnotesize\ttfamily \label{video_8h_acac59940e880980fe328945b1c9463e4} 
+int draw\+\_\+rectangle (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{x}{, }\item[{uint16\+\_\+t}]{y}{, }\item[{uint16\+\_\+t}]{width}{, }\item[{uint16\+\_\+t}]{height}{, }\item[{uint32\+\_\+t}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Draws a rectangle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The X coordinate of the rectangle. \\
+\hline
+{\em y} & The Y coordinate of the rectangle. \\
+\hline
+{\em width} & The width of the rectangle. \\
+\hline
+{\em height} & The height of the rectangle. \\
+\hline
+{\em color} & The color to set. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{video_8h_ae602948d26317c30095613ee80857ce1}\index{video.h@{video.h}!draw\_vline@{draw\_vline}}
+\index{draw\_vline@{draw\_vline}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{draw\_vline()}{draw\_vline()}}
+{\footnotesize\ttfamily \label{video_8h_ae602948d26317c30095613ee80857ce1} 
+int draw\+\_\+vline (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{x}{, }\item[{uint16\+\_\+t}]{y}{, }\item[{uint16\+\_\+t}]{len}{, }\item[{uint32\+\_\+t}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Draws a vertical line. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The X coordinate of the line. \\
+\hline
+{\em y} & The starting Y coordinate of the line. \\
+\hline
+{\em len} & The length of the line. \\
+\hline
+{\em color} & The color to set. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{video_8h_a489104f301358d3ff21d0572c187613a}\index{video.h@{video.h}!draw\_xpm@{draw\_xpm}}
+\index{draw\_xpm@{draw\_xpm}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{draw\_xpm()}{draw\_xpm()}}
+{\footnotesize\ttfamily \label{video_8h_a489104f301358d3ff21d0572c187613a} 
+int draw\+\_\+xpm (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{x}{, }\item[{uint16\+\_\+t}]{y}{, }\item[{xpm\+\_\+map\+\_\+t}]{xpm}{}\end{DoxyParamCaption})}
+
+
+
+Draws an XPM image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The X coordinate to start drawing the XPM. \\
+\hline
+{\em y} & The Y coordinate to start drawing the XPM. \\
+\hline
+{\em xpm} & The XPM map to draw. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{video_8h_a5d62ec4f87ce2a555ac1784bc44f243f}\index{video.h@{video.h}!get\_frame\_buffer\_size@{get\_frame\_buffer\_size}}
+\index{get\_frame\_buffer\_size@{get\_frame\_buffer\_size}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{get\_frame\_buffer\_size()}{get\_frame\_buffer\_size()}}
+{\footnotesize\ttfamily \label{video_8h_a5d62ec4f87ce2a555ac1784bc44f243f} 
+unsigned int get\+\_\+frame\+\_\+buffer\+\_\+size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Calculates the size of the frame buffer. 
+
+\begin{DoxyReturn}{Returns}
+The size of the frame buffer in bytes. 
+\end{DoxyReturn}
+\Hypertarget{video_8h_aa44c1995f8a9a3e1e84115d430b61113}\index{video.h@{video.h}!get\_mode\_info@{get\_mode\_info}}
+\index{get\_mode\_info@{get\_mode\_info}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{get\_mode\_info()}{get\_mode\_info()}}
+{\footnotesize\ttfamily \label{video_8h_aa44c1995f8a9a3e1e84115d430b61113} 
+int get\+\_\+mode\+\_\+info (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{mode}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves the mode information. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mode} & The mode to get information for. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{video_8h_affe13d565147951f3cc7a0cf456a8f63}\index{video.h@{video.h}!set\_frame\_buffer@{set\_frame\_buffer}}
+\index{set\_frame\_buffer@{set\_frame\_buffer}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{set\_frame\_buffer()}{set\_frame\_buffer()}}
+{\footnotesize\ttfamily \label{video_8h_affe13d565147951f3cc7a0cf456a8f63} 
+int set\+\_\+frame\+\_\+buffer (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{mode}{}\end{DoxyParamCaption})}
+
+
+
+Sets up the frame buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mode} & The mode to set the frame buffer for. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{video_8h_a4eb3c78cdbecea0d7a565fa16b9225f4}\index{video.h@{video.h}!set\_pixel\_color@{set\_pixel\_color}}
+\index{set\_pixel\_color@{set\_pixel\_color}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{set\_pixel\_color()}{set\_pixel\_color()}}
+{\footnotesize\ttfamily \label{video_8h_a4eb3c78cdbecea0d7a565fa16b9225f4} 
+int set\+\_\+pixel\+\_\+color (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{x}{, }\item[{uint16\+\_\+t}]{y}{, }\item[{uint32\+\_\+t}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Sets the color of a pixel. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The X coordinate of the pixel. \\
+\hline
+{\em y} & The Y coordinate of the pixel. \\
+\hline
+{\em color} & The color to set. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{video_8h_a2e7785b3a4a6da77b7fede5e76173fd1}\index{video.h@{video.h}!set\_video\_mode@{set\_video\_mode}}
+\index{set\_video\_mode@{set\_video\_mode}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{set\_video\_mode()}{set\_video\_mode()}}
+{\footnotesize\ttfamily \label{video_8h_a2e7785b3a4a6da77b7fede5e76173fd1} 
+int set\+\_\+video\+\_\+mode (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{submode}{}\end{DoxyParamCaption})}
+
+
+
+Sets the video mode. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em submode} & The VBE submode to set. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}
+\Hypertarget{video_8h_a2c402fef55ded43fe29137c5a2e0ee28}\index{video.h@{video.h}!swap\_buffer@{swap\_buffer}}
+\index{swap\_buffer@{swap\_buffer}!video.h@{video.h}}
+\doxysubsubsection{\texorpdfstring{swap\_buffer()}{swap\_buffer()}}
+{\footnotesize\ttfamily \label{video_8h_a2c402fef55ded43fe29137c5a2e0ee28} 
+int swap\+\_\+buffer (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Swaps the buffer to display the contents. 
+
+\begin{DoxyReturn}{Returns}
+0 upon success, 1 otherwise. 
+\end{DoxyReturn}

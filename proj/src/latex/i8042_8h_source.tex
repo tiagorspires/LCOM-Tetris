@@ -1,0 +1,66 @@
+\doxysection{i8042.\+h}
+\hypertarget{i8042_8h_source}{}\label{i8042_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_LCOM\_I8042\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_LCOM\_I8042\_H\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <lcom/lcf.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ IRQ\_LINE\_KEYBOARD\ 1}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ IRQ\_LINE\_MOUSE\ 12}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ OUT\_BUF\_FULL\ BIT(0)}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ IN\_BUF\_FULL\ BIT(1)}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ TIMEOUT\_ERROR\ BIT(6)}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ PARITY\_ERROR\ BIT(7)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ ERROR\ (TIMEOUT\_ERROR|PARITY\_ERROR)}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ DATA\_PORT\ 0X60}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ STATUS\_PORT\ 0X64}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ READ\_COMMAND\_BYTE\_ALERT\ 0X20}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ WRITE\_COMMAND\_BYTE\_ALERT\ 0X60}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ WRITE\_COMMAND\ 0X60}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ READ\_COMMAND\_ADRESS\ 0X64}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ DELAY\_US\ 20000}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ ESC\_BREAK\_CODE\ 0x81}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ A\_BREAK\_CODE\ 0x9E}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ S\_BREAK\_CODE\ 0x9F}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ D\_BREAK\_CODE\ 0xA0}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ Q\_BREAK\_CODE\ 0x90}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ W\_BREAK\_CODE\ 0x91}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ E\_BREAK\_CODE\ 0x92}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ SPACE\_BREAK\_CODE\ 0xB9}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ LEFT\_BUTTON\ \ \ \ \ BIT(0)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ RIGHT\_BUTTON\ \ \ \ BIT(1)}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ MIDDLE\_BUTTON\ \ \ BIT(2)}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ FIRST\_BYTE\ \ \ \ \ \ BIT(3)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ X\_SIGN\ \ \ \ \ \ \ \ \ \ BIT(4)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ Y\_SIGN\ \ \ \ \ \ \ \ \ \ BIT(5)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ X\_OVFL\ \ \ \ \ \ \ \ \ \ BIT(6)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ Y\_OVFL\ \ \ \ \ \ \ \ \ \ BIT(7)}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ SIGN\_EXTENSION\ \ \ \ \ \ 0xFF00}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ BYTE\_TO\_MOUSE\ \ \ \ \ \ \ 0xD4}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ DIS\_DATA\_REPORTING\ \ 0xF5}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ ACK\ 0xFA}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ NACK\ 0xFE}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ ERROR\_REP\ 0xFC}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ TWO\_BYTES\ 0XE0}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ BREAK\_CODE\ BIT(7)}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ MOUSE\ BIT(5)}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ KEYBOARD\_INTERRUPT\_ENABLE\ BIT(0)}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
