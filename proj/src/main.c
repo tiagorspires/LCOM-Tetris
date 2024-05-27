@@ -59,11 +59,9 @@ int (proj_main_loop) (int argc, char **argv) {
     uint8_t irq_set_keyboard;
     uint8_t irq_set_timer;
     uint8_t irq_set_mouse;
-    
+    uint8_t irq_set_rtc;
     
     message msg;
-
-    
 
     if(change_data_report_mode(0xF4)) return 1;
     if(change_data_report_mode(0xEA)) return 1;
@@ -71,6 +69,7 @@ int (proj_main_loop) (int argc, char **argv) {
     if(timer_subscribe_int(&irq_set_timer)) return 1;
     if(keyboard_subscribe(&irq_set_keyboard)) return 1;
     if(mouse_subscribe_int(&irq_set_mouse)) return 1;
+    if(rtc_subscribe_interrupts(&irq_set_rtc)) return 1;
 
     int countpiece = 1;
     while (scancode != ESC_BREAK_CODE && countpiece < 100) { 
@@ -224,6 +223,7 @@ int (proj_main_loop) (int argc, char **argv) {
     if (timer_unsubscribe_int()) return 1;
     if (keyboard_unsubscribe()) return 1;
     if (mouse_unsubscribe_int(&irq_set_mouse)) return 1;
+    if(rtc_unsubscribe_interrupts(&irq_set_rtc)) return 1;
     if (change_data_report_mode(0xF5)) return 1;  
     if (escape_key()) return 1;
     if (vg_exit()) return 1;

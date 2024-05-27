@@ -2,7 +2,8 @@
   "files.associations": {
     "timer.h": "c",
     "lab2.h": "c",
-    "game.h": "c"
+    "game.h": "c",
+    "rtc.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

@@ -8,6 +8,9 @@
 #define RTC_ADDR_REG 0x70
 #define RTC_DATA_REG 0x71
 
+/* Update time in microseconds */
+#define RTC_WAIT_UIP 244
+
 /* RTC registers */
 #define RTC_SEC 0x00          // Seconds
 #define RTC_SEC_ALARM 0x01    // Seconds Alarm
@@ -15,7 +18,7 @@
 #define RTC_MIN_ALARM 0x03    // Minutes Alarm
 #define RTC_HOUR 0x04         // Hours
 #define RTC_HOUR_ALARM 0x05   // Hours Alarm
-#define RTC_DAY_OF_WEEK 0x06  // Day of the Week
+//#define RTC_DAY_OF_WEEK 0x06  // Day of the Week
 #define RTC_DAY_OF_MONTH 0x07 // Day of the Month
 #define RTC_MONTH 0x08        // Month
 #define RTC_YEAR 0x09         // Year
@@ -33,21 +36,17 @@
 /*Binary mode*/
 #define RTC_BINARY BIT(2)
 
-/*RTC mask*/
-#define RTC_MASK BIT(RTC_IRQ) //nao tenho a certeza
+/*RTC Interrupt bits*/
+#define RTC_UIE BIT(4)  //update-ended interrupt enable
+#define RTC_AIE BIT(5)  //alarm interrupt enable
+#define RTC_PIE BIT(6)  //periodic interrupt enable
 
-/*Struct for real-time information*/
+/*Struct for time-of-day information*/
 typedef struct {
     uint8_t seconds;
     uint8_t minutes;
     uint8_t hours;
-    uint8_t day;
-    uint8_t month;
-    uint8_t year;
-} real_time_info;
-
-extern real_time_info time_info;
-extern uint8_t binary_mode;
+} time_t;
 
 
 /* Function prototypes */
