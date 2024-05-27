@@ -8,6 +8,7 @@
  #include "pictures.h"
 #include "mouse.h"
 #include "game.h"
+#include "rtc.h"
 
 extern int counter;
 extern uint8_t scancode;
@@ -61,6 +62,8 @@ int (proj_main_loop) (int argc, char **argv) {
     
     
     message msg;
+
+    
 
     if(change_data_report_mode(0xF4)) return 1;
     if(change_data_report_mode(0xEA)) return 1;
