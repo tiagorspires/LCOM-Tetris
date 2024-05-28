@@ -53,7 +53,11 @@ void \mbox{\hyperlink{game_8h_a04dd662606b330a79aac91ef08df215e}{drop\+\_\+until
 void \mbox{\hyperlink{game_8h_a8ae19c9f72353a9b16766ecfdd6e523e}{handle\+\_\+game\+\_\+over}} (\mbox{\hyperlink{game_8h_a7899b65f1ea0f655e4bbf8d2a5714285}{Game\+State}} \texorpdfstring{$\ast$}{*}state, char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, \mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} pieces\mbox{[}$\,$\mbox{]}, int \texorpdfstring{$\ast$}{*}countpiece)
 \begin{DoxyCompactList}\small\item\em Handles the game over state. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{game_8h_a0bbfaec3e0481738b086c8893388078d}{copy\+\_\+piece\+\_\+to\+\_\+screen}} (\mbox{\hyperlink{struct_tetris_piece}{Tetris\+Piece}} \texorpdfstring{$\ast$}{*}piece, char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]})
-\begin{DoxyCompactList}\small\item\em Copies the Tetris piece to the screen. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Copies the Tetris piece to the screen. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{game_8h_aea3523527d3e994366375c5c1d864c25}{reset\+\_\+screen}} (char screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, int color\+Screen\mbox{[}24\mbox{]}\mbox{[}32\mbox{]})
+\begin{DoxyCompactList}\small\item\em Resets the game screen and color screen to their initial state. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{game_8h_a36de923cf2a8193cca60033ee74381db}{is\+\_\+within\+\_\+rectangle}} (int x, int y, int rect\+\_\+x, int rect\+\_\+y, int rect\+\_\+width, int rect\+\_\+height)
+\begin{DoxyCompactList}\small\item\em Checks if a point is within a rectangle. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -303,6 +307,34 @@ Checks if the Tetris piece is at the bottom.
 \begin{DoxyReturn}{Returns}
 True if the piece is at the bottom, false otherwise. 
 \end{DoxyReturn}
+\Hypertarget{game_8h_a36de923cf2a8193cca60033ee74381db}\index{game.h@{game.h}!is\_within\_rectangle@{is\_within\_rectangle}}
+\index{is\_within\_rectangle@{is\_within\_rectangle}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{is\_within\_rectangle()}{is\_within\_rectangle()}}
+{\footnotesize\ttfamily \label{game_8h_a36de923cf2a8193cca60033ee74381db} 
+bool is\+\_\+within\+\_\+rectangle (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{, }\item[{int}]{rect\+\_\+x}{, }\item[{int}]{rect\+\_\+y}{, }\item[{int}]{rect\+\_\+width}{, }\item[{int}]{rect\+\_\+height}{}\end{DoxyParamCaption})}
+
+
+
+Checks if a point is within a rectangle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The X coordinate of the point. \\
+\hline
+{\em y} & The Y coordinate of the point. \\
+\hline
+{\em rect\+\_\+x} & The X coordinate of the rectangle\textquotesingle{}s top-\/left corner. \\
+\hline
+{\em rect\+\_\+y} & The Y coordinate of the rectangle\textquotesingle{}s top-\/left corner. \\
+\hline
+{\em rect\+\_\+width} & The width of the rectangle. \\
+\hline
+{\em rect\+\_\+height} & The height of the rectangle. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the point is within the rectangle, false otherwise. 
+\end{DoxyReturn}
 \Hypertarget{game_8h_a0728dfe8a559317aafe382eda43c0a21}\index{game.h@{game.h}!move\_piece@{move\_piece}}
 \index{move\_piece@{move\_piece}!game.h@{game.h}}
 \doxysubsubsection{\texorpdfstring{move\_piece()}{move\_piece()}}
@@ -321,6 +353,23 @@ Moves the Tetris piece by the specified deltas.
 \hline
 {\em deltaY} & The delta in the Y direction. \\
 \hline
+{\em screen} & The game screen. \\
+\hline
+{\em color\+Screen} & The color screen. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{game_8h_aea3523527d3e994366375c5c1d864c25}\index{game.h@{game.h}!reset\_screen@{reset\_screen}}
+\index{reset\_screen@{reset\_screen}!game.h@{game.h}}
+\doxysubsubsection{\texorpdfstring{reset\_screen()}{reset\_screen()}}
+{\footnotesize\ttfamily \label{game_8h_aea3523527d3e994366375c5c1d864c25} 
+void reset\+\_\+screen (\begin{DoxyParamCaption}\item[{char}]{screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}, }\item[{int}]{color\+Screen}{\mbox{[}24\mbox{]}\mbox{[}32\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Resets the game screen and color screen to their initial state. 
+
+
+\begin{DoxyParams}{Parameters}
 {\em screen} & The game screen. \\
 \hline
 {\em color\+Screen} & The color screen. \\

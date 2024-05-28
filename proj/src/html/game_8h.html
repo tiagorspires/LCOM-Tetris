@@ -160,6 +160,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a0bbfaec3e0481738b086c8893388078d" id="r_a0bbfaec3e0481738b086c8893388078d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bbfaec3e0481738b086c8893388078d">copy_piece_to_screen</a> (<a class="el" href="struct_tetris_piece.html">TetrisPiece</a> *piece, char screen[24][32], int colorScreen[24][32])</td></tr>
 <tr class="memdesc:a0bbfaec3e0481738b086c8893388078d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the Tetris piece to the screen.  <br /></td></tr>
 <tr class="separator:a0bbfaec3e0481738b086c8893388078d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea3523527d3e994366375c5c1d864c25" id="r_aea3523527d3e994366375c5c1d864c25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea3523527d3e994366375c5c1d864c25">reset_screen</a> (char screen[24][32], int colorScreen[24][32])</td></tr>
+<tr class="memdesc:aea3523527d3e994366375c5c1d864c25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the game screen and color screen to their initial state.  <br /></td></tr>
+<tr class="separator:aea3523527d3e994366375c5c1d864c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36de923cf2a8193cca60033ee74381db" id="r_a36de923cf2a8193cca60033ee74381db"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36de923cf2a8193cca60033ee74381db">is_within_rectangle</a> (int x, int y, int rect_x, int rect_y, int rect_width, int rect_height)</td></tr>
+<tr class="memdesc:a36de923cf2a8193cca60033ee74381db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a point is within a rectangle.  <br /></td></tr>
+<tr class="separator:a36de923cf2a8193cca60033ee74381db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions and data structures for the Tetris game. </p>
@@ -598,6 +604,61 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a36de923cf2a8193cca60033ee74381db" name="a36de923cf2a8193cca60033ee74381db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36de923cf2a8193cca60033ee74381db">&#9670;&#160;</a></span>is_within_rectangle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool is_within_rectangle </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>rect_x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>rect_y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>rect_width</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>rect_height</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks if a point is within a rectangle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>The X coordinate of the point. </td></tr>
+    <tr><td class="paramname">y</td><td>The Y coordinate of the point. </td></tr>
+    <tr><td class="paramname">rect_x</td><td>The X coordinate of the rectangle's top-left corner. </td></tr>
+    <tr><td class="paramname">rect_y</td><td>The Y coordinate of the rectangle's top-left corner. </td></tr>
+    <tr><td class="paramname">rect_width</td><td>The width of the rectangle. </td></tr>
+    <tr><td class="paramname">rect_height</td><td>The height of the rectangle. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the point is within the rectangle, false otherwise. </dd></dl>
+
+</div>
+</div>
 <a id="a0728dfe8a559317aafe382eda43c0a21" name="a0728dfe8a559317aafe382eda43c0a21"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0728dfe8a559317aafe382eda43c0a21">&#9670;&#160;</a></span>move_piece()</h2>
 
@@ -638,6 +699,36 @@ Functions</h2></td></tr>
     <tr><td class="paramname">piece</td><td>The Tetris piece to move. </td></tr>
     <tr><td class="paramname">deltaX</td><td>The delta in the X direction. </td></tr>
     <tr><td class="paramname">deltaY</td><td>The delta in the Y direction. </td></tr>
+    <tr><td class="paramname">screen</td><td>The game screen. </td></tr>
+    <tr><td class="paramname">colorScreen</td><td>The color screen. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aea3523527d3e994366375c5c1d864c25" name="aea3523527d3e994366375c5c1d864c25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea3523527d3e994366375c5c1d864c25">&#9670;&#160;</a></span>reset_screen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reset_screen </td>
+          <td>(</td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>screen</em></span>[24][32], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>colorScreen</em></span>[24][32]&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resets the game screen and color screen to their initial state. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
     <tr><td class="paramname">screen</td><td>The game screen. </td></tr>
     <tr><td class="paramname">colorScreen</td><td>The color screen. </td></tr>
   </table>
