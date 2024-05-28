@@ -164,4 +164,25 @@ void handle_game_over(GameState *state, char screen[24][32], int colorScreen[24]
  */
 void copy_piece_to_screen(TetrisPiece *piece, char screen[24][32], int colorScreen[24][32]);
 
+/**
+ * @brief Resets the game screen and color screen to their initial state.
+ * 
+ * @param screen The game screen.
+ * @param colorScreen The color screen.
+ */
+void reset_screen(char screen[24][32], int colorScreen[24][32]);
+
+/**
+ * @brief Checks if a point is within a rectangle.
+ * 
+ * @param x The X coordinate of the point.
+ * @param y The Y coordinate of the point.
+ * @param rect_x The X coordinate of the rectangle's top-left corner.
+ * @param rect_y The Y coordinate of the rectangle's top-left corner.
+ * @param rect_width The width of the rectangle.
+ * @param rect_height The height of the rectangle.
+ * @return True if the point is within the rectangle, false otherwise.
+ */
+bool is_within_rectangle(int x, int y, int rect_x, int rect_y, int rect_width, int rect_height);
+
 #endif // GAME_H

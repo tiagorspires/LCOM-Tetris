@@ -1,8 +1,6 @@
 #include <lcom/lcf.h>
-
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "game.h"
 
 TetrisPiece create_piece(char type, int startX, int startY, int colorIndex) {
@@ -270,4 +268,27 @@ void copy_piece_to_screen(TetrisPiece *piece, char screen[24][32], int colorScre
         colorScreen[piece->position[i][1]][piece->position[i][0]] = piece->colorIndex;
         screen[piece->position[i][1]][piece->position[i][0]] = piece->type;
     }
+}
+
+
+void reset_screen(char screen[24][32], int colorScreen[24][32]) {
+    for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 32; j++) {
+            if (j == 0 || j >= 14 || i == 0 || i == 23) { 
+                screen[i][j] = 'B';  
+                colorScreen[i][j] = 7; 
+            } else if (j < 15) {
+                screen[i][j] = '-';
+                colorScreen[i][j] = 0;
+            } else {
+                screen[i][j] = ' ';  
+                colorScreen[i][j] = 0;
+            }
+        }
+    }
+}
+
+
+bool is_within_rectangle(int x, int y, int rect_x, int rect_y, int rect_width, int rect_height) {
+    return (x >= rect_x && x <= rect_x + rect_width && y >= rect_y && y <= rect_y + rect_height);
 }

@@ -5,7 +5,7 @@
 #include "video.h"
 #include "keyboard.h"
 #include <lcom/timer.h>
- #include "pictures.h"
+#include "pictures.h"
 #include "mouse.h"
 #include "game.h"
 
@@ -14,27 +14,6 @@ extern uint8_t scancode;
 extern int max_x, max_y; 
 extern struct packet pp;
 extern int x, y;
-
-void reset_screen(char screen[24][32], int colorScreen[24][32]) {
-    for (int i = 0; i < 24; i++) {
-        for (int j = 0; j < 32; j++) {
-            if (j == 0 || j >= 14 || i == 0 || i == 23) { 
-                screen[i][j] = 'B';  
-                colorScreen[i][j] = 7; 
-            } else if (j < 15) {
-                screen[i][j] = '-';
-                colorScreen[i][j] = 0;
-            } else {
-                screen[i][j] = ' ';  
-                colorScreen[i][j] = 0;
-            }
-        }
-    }
-}
-
-bool is_within_rectangle(int x, int y, int rect_x, int rect_y, int rect_width, int rect_height) {
-    return (x >= rect_x && x <= rect_x + rect_width && y >= rect_y && y <= rect_y + rect_height);
-}
 
 int main(int argc, char *argv[]) {
     lcf_set_language("EN-US");
@@ -58,7 +37,6 @@ int (proj_main_loop) (int argc, char **argv) {
     uint8_t irq_set_keyboard;
     uint8_t irq_set_timer;
     uint8_t irq_set_mouse;
-    
     
     message msg;
 
